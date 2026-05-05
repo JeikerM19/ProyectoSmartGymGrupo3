@@ -1,5 +1,32 @@
-.env
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# --- Entornos Virtuales ---
 .venv/
 venv/
-__pycache__/
-*.pyc
+ENV/
+env/
+
+# --- Seguridad (CRÍTICO) ---
+.env
+.env.local
+.env.test
+
+# --- IDEs y Editores ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Sistema Operativo ---
+.DS_Store
+Thumbs.db
+
+# --- Base de Datos / Docker ---
+*.db
+*.sqlite3
+pgdata/

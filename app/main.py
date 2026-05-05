@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+app = FastAPI(title="SmartGym API")
 
 @app.get("/")
-async def root():
-    return {"message": "API funcionando"}
+def read_root():
+    return {"message": "¡API de SmartGym funcionando perfectamente!"}
