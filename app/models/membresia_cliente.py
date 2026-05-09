@@ -6,12 +6,12 @@ class MembresiaCliente(Base):
     __tablename__ = "membresias_cliente"
 
     id = Column(Integer, primary_key=True)
-    fecha_inicio = Column(Date)
-    fecha_vencimiento = Column(Date)
-    estado = Column(String)
+    fecha_inicio = Column(Date, nullable=False)
+    fecha_vencimiento = Column(Date, nullable=False)
+    estado = Column(String, nullable=False)
+    cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False, index=True)
+    plan_id = Column(Integer, ForeignKey("planes_suscripcion.id"), nullable=False, index=True)
 
-    cliente_id = Column(Integer, ForeignKey("clientes.id"))
-    plan_id = Column(Integer, ForeignKey("planes_suscripcion.id"))
-
-    cliente = relationship("Cliente")
-    plan = relationship("PlanSuscripcion")
+    cliente = relationship("Cliente", back_populates="membresias")
+    plan = relationship("PlanSuscripcion", back_populates="membresias")
+    pagos = relationship("Pago", back_populates="membresia")

@@ -6,11 +6,10 @@ class EvaluacionBiometrica(Base):
     __tablename__ = "evaluaciones_biometricas"
 
     id = Column(Integer, primary_key=True)
-    fecha = Column(Date)
-    peso = Column(Numeric)
-    estatura = Column(Numeric)
-    porcentaje_grasa = Column(Numeric)
+    fecha = Column(Date, nullable=False)
+    peso = Column(Numeric(5, 2), nullable=False)
+    estatura = Column(Numeric(5, 2), nullable=False)
+    porcentaje_grasa = Column(Numeric(5, 2), nullable=False)
+    cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False, index=True)
 
-    cliente_id = Column(Integer, ForeignKey("clientes.id"))
-
-    cliente = relationship("Cliente")
+    cliente = relationship("Cliente", back_populates="evaluaciones")

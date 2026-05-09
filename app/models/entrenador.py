@@ -5,10 +5,9 @@ from app.db.base import Base
 class Entrenador(Base):
     __tablename__ = "entrenadores"
 
-    id = Column(Integer, primary_key = True)
-    especialidad = Column(String)
+    id = Column(Integer, primary_key=True)
+    especialidad = Column(String, nullable=False)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, unique=True)
 
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"))
-
-    usuario = relationship("Usuario")
-
+    usuario = relationship("Usuario", back_populates="entrenador")
+    sesiones = relationship("SesionProgramada", back_populates="entrenador")
