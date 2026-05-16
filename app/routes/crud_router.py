@@ -1,0 +1,55 @@
+from typing import Any, Callable, List, Type
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.db.session import get_db
+
+
+def create_crud_router(
+    prefix: str,
+    service: Any,
+    create_schema: Type[BaseModel],
+    update_schema: Type[BaseModel],
+    read_schema: Type[BaseModel],
+    tag: str,
+    item_name: str = "item",
+) -> APIRouter:
+    router = APIRouter(prefix=prefix, tags=[tag])
+
+    @router.get("/", response_model=List[read_schema])
+    async def leer_varios(db: AsyncSession = Depends(get_db)):
+        return await service.obtener_todos(db)
+
+    @router.get("/{item_id}", response_model=read_schema)
+    async def leer(item_id: int, db: AsyncSession = Depends(get_db)):
+        item = await service.obtener(db, item_id)
+        if not item:
+            raise HTTPException(status_code=404, detail=f"{item_name.capitalize()} no encontrado")
+        return item
+
+    @router.post("/", response_model=read_schema)
+    async def crear(obj_in: create_schema, db: AsyncSession = Depends(get_db)):
+        return await service.crear(db, obj_in=obj_in.dict(exclude_none=True))
+
+    @router.put("/{item_id}", response_model=read_schema)
+    async def actualizar(item_id: int, obj_in: update_schema, db: AsyncSession = Depends(get_db)):
+        item = await service.obtener(db, item_id)
+        if not item:
+            raise HTTPException(status_code=404, detail=f"{item_name.capitalize()} no encontrado")
+        return await service.actualizar(db, db_obj=item, obj_in=obj_in.dict(exclude_none=True))
+
+    @router.eliminar("/{item_id}")
+    async def eliminar(item_id: int, db: AsyncSession = Depends(get_db)):
+        deleted = await service.eliminacion_fisica(db, id=item_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail=f"{item_name.capitalize()} no encontrado")
+        return {"detail": f"{item_name.capitalize()} eliminada"}
+    
+    @router.put("/{item_id}", response_model=read_schema)
+    async def desactivar(item_id: int, db: AsyncSession = Depends(get_db)):
+        deleted = await service.eliminacion_logica(db, id=item_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail=f"{item_name.capitalize()} no encontrado")
+        return {"detail": f"{item_name.capitalize()} desactivada"}
+
+    return router
