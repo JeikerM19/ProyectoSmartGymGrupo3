@@ -11,4 +11,4 @@ class Entrenador(Base):
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
 
     usuario = relationship("Usuario")
-
+    estado = Column(String, default="activo")

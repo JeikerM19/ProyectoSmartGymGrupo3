@@ -11,6 +11,6 @@ class Reserva(Base):
 
     cliente_id = Column(Integer, ForeignKey("clientes.id"))
     sesion_id = Column(Integer, ForeignKey("sesiones_programadas.id"))
-
+    estado = Column(String, default="activo")
     cliente = relationship("Cliente")
     sesion = relationship("SesionProgramada")

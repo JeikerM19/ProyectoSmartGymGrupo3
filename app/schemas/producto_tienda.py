@@ -16,6 +16,7 @@ class ActualizarProducto(BaseModel):
 
 class RespuestaProducto(ProductoBase):
     id: int
+    estado: Optional[str] = None
 
     class Config:
         from_attributes = True

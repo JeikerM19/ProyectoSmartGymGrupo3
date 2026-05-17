@@ -8,7 +8,7 @@ class Maquina(Base):
     id = Column(Integer, primary_key = True)
     nombre = Column(String)
     descripcion = Column(String)
-    estado = Column(String)
+    estado = Column(String, default="activo")
 
     categoria_id = Column(Integer, ForeignKey("categorias_maquina.id"))
 

@@ -8,3 +8,4 @@ class ProductoTienda(Base):
     nombre = Column(String)
     precio = Column(Numeric)
     stock = Column(Integer)
+    estado = Column(String, default="activo")

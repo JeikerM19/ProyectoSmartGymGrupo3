@@ -9,6 +9,12 @@ class TicketBase(BaseModel):
 class CrearTicket(TicketBase):
     pass
 
+class ActualizarTicket(BaseModel):
+    descripcion: Optional[str] = None
+    maquina_id: Optional[int] = None
+    fecha_cierre: Optional[datetime] = None
+    costo: Optional[float] = None
+
 class CerrarTicket(BaseModel):
     costo: float
 
@@ -17,6 +23,7 @@ class RespuestaTicket(TicketBase):
     fecha_apertura: datetime
     fecha_cierre: Optional[datetime] = None
     costo: Optional[float] = None
+    estado: Optional[str] = None
 
     class Config:
         from_attributes = True

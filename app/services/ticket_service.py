@@ -7,8 +7,8 @@ from app.models.maquina import Maquina
 
 class CRUDTicketMantenimiento(CRUDBase[TicketMantenimiento]):
     
-    def create(self, db: Session, *, obj_in: dict) -> TicketMantenimiento:
-        # 1. Validar que el Usuario existe
+    def crear(self, db: Session, *, obj_in: dict) -> TicketMantenimiento:
+
         usuario_id = obj_in.get("usuario_id")
         usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
         if not usuario:
@@ -19,4 +19,6 @@ class CRUDTicketMantenimiento(CRUDBase[TicketMantenimiento]):
         if not maquina:
             raise HTTPException(status_code=404, detail="No se puede reservar: La máquina no existe.")
 
-        return super().create(db, obj_in=obj_in)
+        return super().crear(db, obj_in=obj_in)
+
+ticket_service = CRUDTicketMantenimiento(TicketMantenimiento)

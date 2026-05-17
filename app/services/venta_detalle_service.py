@@ -7,8 +7,8 @@ from app.models.producto_tienda import ProductoTienda
 
 class CRUDDetalleVenta(CRUDBase[DetalleVenta]):
     
-    def create(self, db: Session, *, obj_in: dict) -> DetalleVenta:
-        # 1. Validar que la Venta existe
+    def crear(self, db: Session, *, obj_in: dict) -> DetalleVenta:
+
         venta_id = obj_in.get("venta_id")
         venta = db.query(VentaTienda).filter(VentaTienda.id == venta_id).first()
         if not venta:
@@ -18,4 +18,6 @@ class CRUDDetalleVenta(CRUDBase[DetalleVenta]):
         producto = db.query(ProductoTienda).filter(ProductoTienda.id == producto_tienda).first()
         if not producto:
             raise HTTPException(status_code=404, detail="No se puede crear el detalle: El producto no existe.")
-        return super().create(db, obj_in=obj_in)
+        return super().crear(db, obj_in=obj_in)
+    
+detalle_venta_service = CRUDDetalleVenta(DetalleVenta)

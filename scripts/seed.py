@@ -14,7 +14,7 @@ from app.models.plan_suscripcion import PlanSuscripcion
 from app.models.producto_tienda import ProductoTienda
 
 # Credenciales obtenidas de tu docker-compose.yml
-DATABASE_URL = "postgresql://admin_gym:ucla_computacion_2026@localhost:5433/smartgym_db"
+DATABASE_URL = "postgresql://admin_gym:ucla_computacion_2026@db:5432/smartgym_db"
 
 def seed():
     engine = create_engine(DATABASE_URL)

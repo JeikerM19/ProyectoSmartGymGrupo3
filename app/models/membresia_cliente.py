@@ -8,7 +8,7 @@ class MembresiaCliente(Base):
     id = Column(Integer, primary_key=True)
     fecha_inicio = Column(Date)
     fecha_vencimiento = Column(Date)
-    estado = Column(String)
+    estado = Column(String, default="activo")
 
     cliente_id = Column(Integer, ForeignKey("clientes.id"))
     plan_id = Column(Integer, ForeignKey("planes_suscripcion.id"))

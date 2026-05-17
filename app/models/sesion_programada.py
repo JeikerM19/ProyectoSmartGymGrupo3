@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Date, Time
+from sqlalchemy import Column, Integer, ForeignKey, Date, Time, String
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 
@@ -13,6 +13,6 @@ class SesionProgramada(Base):
 
     disciplina_id = Column(Integer, ForeignKey("disciplinas.id"))
     entrenador_id = Column(Integer, ForeignKey("entrenadores.id"))
-
+    estado = Column(String, default="activo")
     disciplina = relationship("Disciplina")
     entrenador = relationship("Entrenador")

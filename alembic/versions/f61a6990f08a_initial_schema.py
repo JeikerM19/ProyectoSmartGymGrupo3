@@ -1,8 +1,8 @@
-"""setup_inicial
+"""initial_schema
 
-Revision ID: d0aa9a074a8d
+Revision ID: f61a6990f08a
 Revises: 
-Create Date: 2026-05-08 18:04:25.749980
+Create Date: 2026-05-17 15:45:21.369728
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'd0aa9a074a8d'
+revision: str = 'f61a6990f08a'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,12 +24,14 @@ def upgrade() -> None:
     op.create_table('categorias_maquina',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nombre', sa.String(), nullable=False),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('disciplinas',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nombre', sa.String(), nullable=True),
     sa.Column('descripcion', sa.String(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('planes_suscripcion',
@@ -37,6 +39,7 @@ def upgrade() -> None:
     sa.Column('nombre', sa.String(), nullable=True),
     sa.Column('precio', sa.Numeric(), nullable=True),
     sa.Column('duracion_dias', sa.Integer(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('productos_tienda',
@@ -44,11 +47,13 @@ def upgrade() -> None:
     sa.Column('nombre', sa.String(), nullable=True),
     sa.Column('precio', sa.Numeric(), nullable=True),
     sa.Column('stock', sa.Integer(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('roles',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nombre', sa.String(), nullable=False),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('nombre')
     )
@@ -63,8 +68,10 @@ def upgrade() -> None:
     )
     op.create_table('usuarios',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('nombre', sa.String(), nullable=True),
     sa.Column('email', sa.String(), nullable=False),
     sa.Column('password', sa.String(), nullable=False),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.Column('rol_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['rol_id'], ['roles.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -73,8 +80,8 @@ def upgrade() -> None:
     op.create_table('clientes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('cedula', sa.String(), nullable=True),
-    sa.Column('nombre_completo', sa.String(), nullable=True),
     sa.Column('telefono', sa.String(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.Column('usuario_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['usuario_id'], ['usuarios.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -84,6 +91,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('especialidad', sa.String(), nullable=True),
     sa.Column('usuario_id', sa.Integer(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['usuario_id'], ['usuarios.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -95,6 +103,7 @@ def upgrade() -> None:
     sa.Column('costo', sa.Numeric(), nullable=True),
     sa.Column('maquina_id', sa.Integer(), nullable=True),
     sa.Column('usuario_id', sa.Integer(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['maquina_id'], ['maquinas.id'], ),
     sa.ForeignKeyConstraint(['usuario_id'], ['usuarios.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -102,6 +111,7 @@ def upgrade() -> None:
     op.create_table('control_accesos',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('fecha_hora', sa.DateTime(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.Column('cliente_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['cliente_id'], ['clientes.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -112,6 +122,7 @@ def upgrade() -> None:
     sa.Column('peso', sa.Numeric(), nullable=True),
     sa.Column('estatura', sa.Numeric(), nullable=True),
     sa.Column('porcentaje_grasa', sa.Numeric(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.Column('cliente_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['cliente_id'], ['clientes.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -135,6 +146,7 @@ def upgrade() -> None:
     sa.Column('cupo_maximo', sa.Integer(), nullable=True),
     sa.Column('disciplina_id', sa.Integer(), nullable=True),
     sa.Column('entrenador_id', sa.Integer(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['disciplina_id'], ['disciplinas.id'], ),
     sa.ForeignKeyConstraint(['entrenador_id'], ['entrenadores.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -143,6 +155,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('fecha_venta', sa.DateTime(), nullable=True),
     sa.Column('total', sa.Numeric(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.Column('cliente_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['cliente_id'], ['clientes.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -153,6 +166,7 @@ def upgrade() -> None:
     sa.Column('precio_unitario', sa.Numeric(), nullable=True),
     sa.Column('venta_id', sa.Integer(), nullable=True),
     sa.Column('producto_id', sa.Integer(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['producto_id'], ['productos_tienda.id'], ),
     sa.ForeignKeyConstraint(['venta_id'], ['ventas_tienda.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -164,6 +178,7 @@ def upgrade() -> None:
     sa.Column('metodo_pago', sa.String(), nullable=True),
     sa.Column('membresia_id', sa.Integer(), nullable=True),
     sa.Column('usuario_id', sa.Integer(), nullable=True),
+    sa.Column('estado', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['membresia_id'], ['membresias_cliente.id'], ),
     sa.ForeignKeyConstraint(['usuario_id'], ['usuarios.id'], ),
     sa.PrimaryKeyConstraint('id')

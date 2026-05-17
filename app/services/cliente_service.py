@@ -6,3 +6,4 @@ class CRUDCliente(CRUDBase[Cliente]):
         return db.query(self.model).filter(self.model.nombre == nombre).first()
 
 cliente = CRUDCliente(Cliente)
+cliente_service = cliente

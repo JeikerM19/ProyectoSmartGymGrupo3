@@ -10,9 +10,16 @@ class PagoBase(BaseModel):
 class CrearPago(PagoBase):
     pass
 
+class ActualizarPago(BaseModel):
+    monto: Optional[float] = None
+    metodo_pago: Optional[str] = None
+    membresia_id: Optional[int] = None
+    fecha_pago: Optional[datetime] = None
+
 class RespuestaPago(PagoBase):
     id: int
     fecha_pago: datetime
+    estado: Optional[str] = None
 
     class Config:
         from_attributes = True

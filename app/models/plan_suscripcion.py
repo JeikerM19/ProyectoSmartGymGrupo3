@@ -8,3 +8,4 @@ class PlanSuscripcion(Base):
     nombre = Column(String)
     precio = Column(Numeric)
     duracion_dias = Column(Integer)
+    estado = Column(String, default="activo")

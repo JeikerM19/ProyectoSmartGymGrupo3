@@ -6,3 +6,4 @@ class CRUDEntrenador(CRUDBase[Entrenador]):
         return db.query(self.model).filter(self.model.disciplina == disciplina).first()
 
 entrenador = CRUDEntrenador(Entrenador)
+entrenador_service = entrenador

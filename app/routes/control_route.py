@@ -1,0 +1,15 @@
+from app.routes.crud_router import create_crud_router
+from app.schemas.control_acceso import CrearControlAcceso, ActualizarControlAcceso, RespuestaControlAcceso
+from app.services.control_service import control_acceso_service
+
+
+router = create_crud_router(
+    prefix="/api/v1/control_acceso",
+    service=control_acceso_service,
+    create_schema=CrearControlAcceso,
+    update_schema=ActualizarControlAcceso,
+    read_schema=RespuestaControlAcceso,
+    tag="Control de Acceso",
+    item_name="control de acceso",
+    activate=True,
+)

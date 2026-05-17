@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
 # 5. Copiamos e instalamos las librerías de Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir "email-validator>=2.0"
 
 # 6. Copiamos el resto del código del proyecto
 COPY . .

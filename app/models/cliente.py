@@ -7,9 +7,8 @@ class Cliente(Base):
 
     id = Column(Integer, primary_key=True)
     cedula = Column(String, unique=True)
-    nombre_completo = Column(String)
     telefono = Column(String)
-
+    estado = Column(String, default="activo")
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
 
     usuario = relationship("Usuario")

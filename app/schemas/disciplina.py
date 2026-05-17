@@ -8,8 +8,13 @@ class DisciplinaBase(BaseModel):
 class CrearDisciplina(DisciplinaBase):
     pass
 
+class ActualizarDisciplina(BaseModel):
+    nombre: Optional[str] = None
+    descripcion: Optional[str] = None
+
 class RespuestaDisciplina(DisciplinaBase):
     id: int
+    estado: Optional[str] = None
 
     class Config:
         from_attributes = True

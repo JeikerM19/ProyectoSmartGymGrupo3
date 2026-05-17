@@ -23,6 +23,7 @@ class ActualizarSesion(BaseModel):
 
 class RespuestaSesion(SesionBase):
     id: int
+    estado: Optional[str] = None
 
     class Config:
         from_attributes = True

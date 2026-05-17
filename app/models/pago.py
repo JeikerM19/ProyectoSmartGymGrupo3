@@ -12,6 +12,6 @@ class Pago(Base):
 
     membresia_id = Column(Integer, ForeignKey("membresias_cliente.id"))
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
-
+    estado = Column(String, default="activo")
     membresia = relationship("MembresiaCliente")
     usuario = relationship("Usuario")

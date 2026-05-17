@@ -6,7 +6,7 @@ from app.models.entrenador import Entrenador
 from app.models.disciplina import Disciplina
 
 class CRUDSesion(CRUDBase[SesionProgramada]):
-    # Método específico para ver la agenda de un entrenador
+
     def obtener_por_entrenador(self, db: Session, entrenador_id: int):
         return db.query(self.model).filter(
             self.model.entrenador_id == entrenador_id,
@@ -14,7 +14,7 @@ class CRUDSesion(CRUDBase[SesionProgramada]):
         ).all()
         
     def crear(self, db: Session, *, obj_in: dict) -> SesionProgramada:
-        # 1. Validar Entrenador
+
         entrenador_id = obj_in.get("entrenador_id")
         entrenador = db.query(Entrenador).filter(Entrenador.id == entrenador_id).first()
         if not entrenador:

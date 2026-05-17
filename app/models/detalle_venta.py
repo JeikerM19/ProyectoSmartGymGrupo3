@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Numeric
+from sqlalchemy import Column, Integer, ForeignKey, Numeric, String
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 
@@ -11,6 +11,6 @@ class DetalleVenta(Base):
 
     venta_id = Column(Integer, ForeignKey("ventas_tienda.id"))
     producto_id = Column(Integer, ForeignKey("productos_tienda.id"))
-
+    estado = Column(String, default="activo")
     venta = relationship("VentaTienda")
     producto = relationship("ProductoTienda")

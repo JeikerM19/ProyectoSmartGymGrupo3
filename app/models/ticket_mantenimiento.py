@@ -13,6 +13,6 @@ class TicketMantenimiento(Base):
 
     maquina_id = Column(Integer, ForeignKey("maquinas.id"))
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
-
+    estado = Column(String, default="activo")
     maquina = relationship("Maquina")
     usuario = relationship("Usuario")

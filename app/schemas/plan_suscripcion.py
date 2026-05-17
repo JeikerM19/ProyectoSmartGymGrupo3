@@ -16,6 +16,7 @@ class ActualizarPlan(BaseModel):
 
 class RespuestaPlan(PlanBase):
     id: int
+    estado: Optional[str] = None
 
     class Config:
         from_attributes = True

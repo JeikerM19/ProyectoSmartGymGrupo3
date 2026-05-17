@@ -7,3 +7,4 @@ class Disciplina(Base):
     id = Column(Integer, primary_key = True)
     nombre = Column(String)
     descripcion = Column(String)
+    estado = Column(String, default="activo")

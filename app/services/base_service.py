@@ -32,6 +32,15 @@ class CRUDBase(Generic[ModelType]):
         await db.refresh(db_obj)
         return db_obj
 
+    async def cambiar_estado(self, db: AsyncSession, *, id: Any, estado: str) -> Optional[ModelType]:
+        obj = await db.get(self.model, id)
+        if obj and hasattr(obj, "estado"):
+            obj.estado = estado
+            await db.commit()
+            await db.refresh(obj)
+            return obj
+        return None
+
     # --- ELIMINACIONES ---
     
     async def eliminacion_logica(self, db: AsyncSession, *, id: int) -> Optional[ModelType]:
@@ -41,6 +50,15 @@ class CRUDBase(Generic[ModelType]):
             await db.commit()
             await db.refresh(obj)
         return obj
+
+    async def activar(self, db: AsyncSession, *, id: Any) -> Optional[ModelType]:
+        obj = await db.get(self.model, id)
+        if obj and hasattr(obj, "estado") and getattr(obj, "estado") == "inactivo":
+            obj.estado = "activo"
+            await db.commit()
+            await db.refresh(obj)
+            return obj
+        return None
 
     async def eliminacion_fisica(self, db: AsyncSession, *, id: int) -> bool:
         obj = await db.get(self.model, id)
