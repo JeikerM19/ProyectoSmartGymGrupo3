@@ -7,5 +7,6 @@ class Rol(Base):
 
     id = Column(Integer, primary_key=True)
     nombre = Column(String, unique=True, nullable=False)
-
+    estado = Column(String, default="activo")
     usuarios = relationship("Usuario",back_populates="rol")
+    

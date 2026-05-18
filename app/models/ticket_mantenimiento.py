@@ -12,6 +12,7 @@ class TicketMantenimiento(Base):
     costo = Column(Numeric(10, 2), nullable=False)
     maquina_id = Column(Integer, ForeignKey("maquinas.id"), nullable=False, index=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, index=True)
-
+    estado = Column(String, default="activo")
     maquina = relationship("Maquina", back_populates="tickets")
     usuario = relationship("Usuario", back_populates="tickets_mantenimiento")
+

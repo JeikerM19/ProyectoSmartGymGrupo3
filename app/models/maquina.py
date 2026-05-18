@@ -9,7 +9,7 @@ class Maquina(Base):
     nombre = Column(String, nullable=False)
     descripcion = Column(String, nullable=False)
     estado = Column(String, nullable=False)
+    estado = Column(String, default="activo")
     categoria_id = Column(Integer, ForeignKey("categorias_maquina.id"), nullable=False, index=True)
-
     categoria = relationship("CategoriaMaquina", back_populates="maquinas")
     tickets = relationship("TicketMantenimiento", back_populates="maquina")

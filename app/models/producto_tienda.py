@@ -9,5 +9,5 @@ class ProductoTienda(Base):
     nombre = Column(String, nullable=False)
     precio = Column(Numeric(10, 2), nullable=False)
     stock = Column(Integer, nullable=False)
-
+    estado = Column(String, default="activo")
     detalles = relationship("DetalleVenta", back_populates="producto")

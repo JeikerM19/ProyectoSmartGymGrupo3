@@ -17,3 +17,4 @@ class Cliente(Base):
     evaluaciones = relationship("EvaluacionBiometrica",back_populates="cliente")
     accesos = relationship("ControlAcceso", back_populates="cliente")
     ventas = relationship("VentaTienda", back_populates="cliente")
+    estado = Column(String, default="activo")

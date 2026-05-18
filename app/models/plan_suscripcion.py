@@ -9,5 +9,6 @@ class PlanSuscripcion(Base):
     nombre = Column(String, nullable=False, unique=True)
     precio = Column(Numeric(10, 2), nullable=False)
     duracion_dias = Column(Integer, nullable=False)
-
+    estado = Column(String, default="activo")
     membresias = relationship("MembresiaCliente", back_populates="plan")
+

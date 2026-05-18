@@ -7,5 +7,6 @@ class CategoriaMaquina(Base):
 
     id = Column(Integer, primary_key=True)
     nombre = Column(String, nullable=False, unique=True)
-
+    estado = Column(String, default="activo")
     maquinas = relationship("Maquina", back_populates="categoria")
+    

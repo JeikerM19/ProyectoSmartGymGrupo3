@@ -8,6 +8,6 @@ class Entrenador(Base):
     id = Column(Integer, primary_key=True)
     especialidad = Column(String, nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, unique=True)
-
+    estado = Column(String, default="activo")
     usuario = relationship("Usuario", back_populates="entrenador")
     sesiones = relationship("SesionProgramada", back_populates="entrenador")

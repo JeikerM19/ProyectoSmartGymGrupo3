@@ -11,7 +11,6 @@ class MembresiaCliente(Base):
     estado = Column(String, nullable=False)
     cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False, index=True)
     plan_id = Column(Integer, ForeignKey("planes_suscripcion.id"), nullable=False, index=True)
-
     cliente = relationship("Cliente", back_populates="membresias")
     plan = relationship("PlanSuscripcion", back_populates="membresias")
     pagos = relationship("Pago", back_populates="membresia")
