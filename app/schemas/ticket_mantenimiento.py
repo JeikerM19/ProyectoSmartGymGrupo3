@@ -5,6 +5,7 @@ from typing import Optional
 class TicketBase(BaseModel):
     descripcion: str
     maquina_id: int
+    usuario_id: int
 
 class CrearTicket(TicketBase):
     pass
@@ -12,8 +13,10 @@ class CrearTicket(TicketBase):
 class ActualizarTicket(BaseModel):
     descripcion: Optional[str] = None
     maquina_id: Optional[int] = None
+    usuario_id: Optional[int] = None
     fecha_cierre: Optional[datetime] = None
     costo: Optional[float] = None
+    estado: Optional[str] = None
 
 class CerrarTicket(BaseModel):
     costo: float

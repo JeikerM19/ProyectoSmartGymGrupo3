@@ -1,9 +1,16 @@
-from app.models.entrenador import Entrenador
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.base_service import CRUDBase
+from app.models.entrenador import Entrenador
 
 class CRUDEntrenador(CRUDBase[Entrenador]):
-    def buscar_por_disciplina(self, db, disciplina: str):
-        return db.query(self.model).filter(self.model.disciplina == disciplina).first()
+    async def buscar_por_especialidad(
+        self, db: AsyncSession, especialidad: str
+    ) -> Entrenador | None:
 
-entrenador = CRUDEntrenador(Entrenador)
-entrenador_service = entrenador
+        result = await db.execute(
+            select(Entrenador).where(Entrenador.especialidad == especialidad)
+        )
+        return result.scalars().first()
+
+entrenador_service = CRUDEntrenador(Entrenador)

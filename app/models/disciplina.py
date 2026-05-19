@@ -7,6 +7,6 @@ class Disciplina(Base):
 
     id = Column(Integer, primary_key=True)
     nombre = Column(String, nullable=False,unique=True)
-    descripcion = Column(String,nullable=False)
+    descripcion = Column(String,nullable=True)
     estado = Column(String, default="activo")
     sesiones = relationship("SesionProgramada", back_populates="disciplina")

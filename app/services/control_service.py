@@ -1,21 +1,32 @@
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 from app.services.base_service import CRUDBase
 from app.models.control_acceso import ControlAcceso
 from app.models.cliente import Cliente
-from app.models.maquina import Maquina
 
 class CRUDControlAcceso(CRUDBase[ControlAcceso]):
+    async def crear(self, db: AsyncSession, *, obj_in: dict) -> ControlAcceso:
 
-    def crear(self, db: Session, *, obj_in: dict) -> ControlAcceso:
-        # 1. Validar que el Usuario existe
-        cliente_id = obj_in.get("usuario_id")
-        cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
+        cedula = obj_in.get("cedula")
+        result = await db.execute(select(Cliente).where(Cliente.cedula == cedula))
+        cliente = result.scalars().first()
+
         if not cliente:
-            raise HTTPException(status_code=404, detail="No se puede reservar: El cliente no existe.")
-        if cliente.estado != "activo":
-            raise HTTPException(status_code=403, detail="Acceso denegado: Cliente inactivo o suspendido.")
-        return super().crear(db, obj_in=obj_in)
+            raise HTTPException(
+                status_code=404,
+                detail="No se puede registrar acceso: cliente no existe.",
+            )
 
-control_acceso = CRUDControlAcceso(ControlAcceso)
-control_acceso_service = control_acceso
+        if cliente.estado != "activo":
+            raise HTTPException(
+                status_code=403,
+                detail="Acceso denegado: cliente inactivo o suspendido.",
+            )
+
+        obj_in["cliente_id"] = cliente.id
+        obj_in.pop("cedula", None) #elimina la cedula para evitar problemas con el model
+
+        return await super().crear(db, obj_in=obj_in)
+
+control_acceso_service = CRUDControlAcceso(ControlAcceso)

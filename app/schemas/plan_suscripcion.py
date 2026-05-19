@@ -5,6 +5,7 @@ class PlanBase(BaseModel):
     nombre: str
     precio: float
     duracion_dias: int
+    estado: Optional[str] = "activo"
 
 class CrearPlan(PlanBase):
     pass
@@ -13,10 +14,10 @@ class ActualizarPlan(BaseModel):
     nombre: Optional[str] = None
     precio: Optional[float] = None
     duracion_dias: Optional[int] = None
+    estado: Optional[str] = None
 
 class RespuestaPlan(PlanBase):
     id: int
-    estado: Optional[str] = None
 
     class Config:
         from_attributes = True

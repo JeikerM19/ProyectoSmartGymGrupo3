@@ -31,14 +31,14 @@ def create_crud_router(
 
     @router.post("/", response_model=read_schema)
     async def crear(obj_in: create_schema, db: AsyncSession = Depends(get_db)):
-        return await service.crear(db, obj_in=obj_in.dict(exclude_none=True))
+        return await service.crear(db, obj_in=obj_in.model_dump(exclude_none=True))
 
     @router.put("/{item_id}", response_model=read_schema)
     async def actualizar(item_id: int, obj_in: update_schema, db: AsyncSession = Depends(get_db)):
         item = await service.obtener(db, item_id)
         if not item:
             raise HTTPException(status_code=404, detail=f"{item_name.capitalize()} no encontrado")
-        return await service.actualizar(db, db_obj=item, obj_in=obj_in.dict(exclude_none=True))
+        return await service.actualizar(db, db_obj=item, obj_in=obj_in.model_dump(exclude_none=True))
 
     if state_schema is not None:
         @router.put("/{item_id}/estado", response_model=read_schema)

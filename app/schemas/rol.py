@@ -3,12 +3,14 @@ from typing import Optional
 
 class RolBase(BaseModel):
     nombre: str
+    estado: Optional[str] = "activo"
 
 class CrearRol(RolBase):
     pass
 
 class ActualizarRol(BaseModel):
     nombre: Optional[str] = None
+    estado: Optional[str] = None
 
 class RespuestaRol(RolBase):
     id: int

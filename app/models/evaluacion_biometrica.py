@@ -11,5 +11,6 @@ class EvaluacionBiometrica(Base):
     estatura = Column(Numeric(5, 2), nullable=False)
     porcentaje_grasa = Column(Numeric(5, 2), nullable=False)
     cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False, index=True)
+    observaciones = Column(String, nullable=True)
     estado = Column(String, default="activo")
     cliente = relationship("Cliente", back_populates="evaluaciones")

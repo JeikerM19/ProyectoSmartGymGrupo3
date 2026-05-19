@@ -13,8 +13,6 @@ class Pago(Base):
     membresia_id = Column(Integer, ForeignKey("membresias_cliente.id"), nullable=False, index=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, index=True)
     estado = Column(String, default="activo")
-    membresia_id = Column(Integer, ForeignKey("membresias_cliente.id"))
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"))
-    membresia = relationship("MembresiaCliente", back_populates="pagos")
-    usuario = relationship("Usuario",back_populates="pagos")
 
+    membresia = relationship("MembresiaCliente", back_populates="pagos")
+    usuario = relationship("Usuario", back_populates="pagos")

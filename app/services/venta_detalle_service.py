@@ -1,4 +1,5 @@
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 from app.services.base_service import CRUDBase
 from app.models.detalle_venta import DetalleVenta
@@ -6,18 +7,28 @@ from app.models.venta_tienda import VentaTienda
 from app.models.producto_tienda import ProductoTienda
 
 class CRUDDetalleVenta(CRUDBase[DetalleVenta]):
-    
-    def crear(self, db: Session, *, obj_in: dict) -> DetalleVenta:
+    async def crear(self, db: AsyncSession, *, obj_in: dict) -> DetalleVenta:
 
         venta_id = obj_in.get("venta_id")
-        venta = db.query(VentaTienda).filter(VentaTienda.id == venta_id).first()
-        if not venta:
-            raise HTTPException(status_code=404, detail="No se puede crear el detalle: La venta no existe.")
 
-        producto_tienda = obj_in.get("producto_tienda_id")
-        producto = db.query(ProductoTienda).filter(ProductoTienda.id == producto_tienda).first()
+        result_venta = await db.execute(
+            select(VentaTienda).where(VentaTienda.id == venta_id)
+        )
+        venta = result_venta.scalars().first()
+
+        if not venta:
+            raise HTTPException(status_code=404, detail="La venta no existe.")
+
+        producto_id = obj_in.get("producto_id")
+
+        result_prod = await db.execute(
+            select(ProductoTienda).where(ProductoTienda.id == producto_id)
+        )
+        producto = result_prod.scalars().first()
+
         if not producto:
-            raise HTTPException(status_code=404, detail="No se puede crear el detalle: El producto no existe.")
-        return super().crear(db, obj_in=obj_in)
-    
+            raise HTTPException(status_code=404, detail="El producto no existe.")
+
+        return await super().crear(db, obj_in=obj_in)
+
 detalle_venta_service = CRUDDetalleVenta(DetalleVenta)

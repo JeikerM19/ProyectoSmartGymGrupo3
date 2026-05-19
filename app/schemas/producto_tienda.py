@@ -5,6 +5,7 @@ class ProductoBase(BaseModel):
     nombre: str
     precio: float
     stock: int
+    estado: Optional[str] = "activo"
 
 class CrearProducto(ProductoBase):
     pass
@@ -13,10 +14,10 @@ class ActualizarProducto(BaseModel):
     nombre: Optional[str] = None
     precio: Optional[float] = None
     stock: Optional[int] = None
+    estado: Optional[str] = None
 
 class RespuestaProducto(ProductoBase):
     id: int
-    estado: Optional[str] = None
 
     class Config:
         from_attributes = True

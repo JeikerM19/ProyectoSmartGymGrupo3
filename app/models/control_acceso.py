@@ -9,6 +9,7 @@ class ControlAcceso(Base):
     id = Column(Integer, primary_key=True)
     fecha_hora = Column(DateTime, nullable=False,server_default=func.now())
     cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False, index=True)
+    mensaje= Column(String, nullable=True)
     estado = Column(String, default="activo")
     cliente = relationship("Cliente", back_populates="accesos")
 

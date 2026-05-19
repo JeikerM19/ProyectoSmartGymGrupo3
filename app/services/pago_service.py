@@ -1,28 +1,36 @@
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 from app.services.base_service import CRUDBase
+from app.models.pago import Pago
 from app.models.usuario import Usuario
 from app.models.membresia_cliente import MembresiaCliente
-from app.models.pago import Pago
 
 class CRUDPago(CRUDBase[Pago]):
-    
-    def crear(self, db: Session, *, obj_in: dict) -> Pago:
+    async def crear(self, db: AsyncSession, *, obj_in: dict) -> Pago:
 
         usuario_id = obj_in.get("usuario_id")
-        usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+        usuario = await db.execute(select(Usuario).where(Usuario.id == usuario_id))
+        usuario = usuario.scalars().first()
+
         if not usuario:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
-        membresia = db.query(MembresiaCliente).filter(MembresiaCliente.usuario_id == usuario_id).first()
+        membresia = await db.execute(
+            select(MembresiaCliente).where(MembresiaCliente.cliente_id == usuario.id)
+        )
+        membresia = membresia.scalars().first()
+
         if not membresia:
             raise HTTPException(status_code=404, detail="Membresía no encontrada")
 
-        pago = super().crear(db, obj_in=obj_in)
+        obj_in["membresia_id"] = membresia.id
+
+        pago = await super().crear(db, obj_in=obj_in)
 
         membresia.estado = "activa"
-        db.commit()
+        await db.commit()
 
         return pago
 
-pago = CRUDPago(Pago)
+pago_service = CRUDPago(Pago)

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 
@@ -8,8 +8,12 @@ class Cliente(Base):
     id = Column(Integer, primary_key=True)
     cedula = Column(String, unique=True, nullable=False)
     nombre_completo = Column(String, nullable=False)
-    telefono = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    telefono = Column(String, nullable=True)
+    fecha_registro = Column(Date, nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, unique=True)
+    
+    
 
     usuario = relationship("Usuario",back_populates="cliente")
     reservas = relationship("Reserva", back_populates="cliente")
