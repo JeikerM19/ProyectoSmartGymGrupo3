@@ -7,7 +7,7 @@ from app.models.maquina import Maquina
 
 class CRUDControlAcceso(CRUDBase[ControlAcceso]):
 
-    def crear(self, db: Session, *, obj_in: dict) -> ControlAcceso:
+    async def crear(self, db: Session, *, obj_in: dict) -> ControlAcceso:
         # 1. Validar que el Usuario existe
         cliente_id = obj_in.get("usuario_id")
         cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()

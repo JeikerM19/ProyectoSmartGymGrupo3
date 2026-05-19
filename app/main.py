@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from fastapi.security import HTTPBearer
 import app.models
 from app.db.base import Base
 from app.db.session import engine
@@ -19,7 +20,11 @@ from app.routes.reserva_route import router as reserva_router
 from app.routes.sesion_route import router as sesion_router
 from app.routes.usuario_route import router as usuario_router
 from app.routes.venta_route import router as venta_router
+from app.routes.venta_detalle_route import router as venta_detalle_router
 from app.routes.ticket_route import router as ticket_router
+from app.routes.auth_route import router as auth_route
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,7 +39,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="SmartGym API", lifespan=lifespan)
-
+app.include_router(auth_route)
 app.include_router(maquina_router)
 app.include_router(categoria_router)
 app.include_router(cliente_router)
@@ -51,6 +56,7 @@ app.include_router(reserva_router)
 app.include_router(sesion_router)
 app.include_router(usuario_router)
 app.include_router(venta_router)
+app.include_router(venta_detalle_router)
 app.include_router(ticket_router)
 
 @app.get("/")

@@ -7,7 +7,7 @@ from app.models.maquina import Maquina
 
 class CRUDTicketMantenimiento(CRUDBase[TicketMantenimiento]):
     
-    def crear(self, db: Session, *, obj_in: dict) -> TicketMantenimiento:
+    async def crear(self, db: Session, *, obj_in: dict) -> TicketMantenimiento:
 
         usuario_id = obj_in.get("usuario_id")
         usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()

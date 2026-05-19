@@ -1,6 +1,8 @@
 from app.routes.crud_router import create_crud_router
 from app.schemas.ticket_mantenimiento import CrearTicket, ActualizarTicket, RespuestaTicket
 from app.services.ticket_service import ticket_service
+from fastapi import Depends
+from app.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/tickets_mantenimiento",
@@ -11,4 +13,9 @@ router = create_crud_router(
     tag="Tickets Mantenimiento",
     item_name="ticket",
     activate=True,
+    update_deps=[Depends(RoleChecker([1,2]))],
+    create_deps=[Depends(RoleChecker([1,2]))],
+    delete_deps=[Depends(RoleChecker([1,2]))],
+    read_deps=[Depends(RoleChecker([1,2]))],
+    obtein_deps=[Depends(RoleChecker([1,2]))]
 )

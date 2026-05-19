@@ -7,7 +7,7 @@ from app.models.producto_tienda import ProductoTienda
 
 class CRUDDetalleVenta(CRUDBase[DetalleVenta]):
     
-    def crear(self, db: Session, *, obj_in: dict) -> DetalleVenta:
+    async def crear(self, db: Session, *, obj_in: dict) -> DetalleVenta:
 
         venta_id = obj_in.get("venta_id")
         venta = db.query(VentaTienda).filter(VentaTienda.id == venta_id).first()

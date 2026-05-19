@@ -6,7 +6,7 @@ from app.models.cliente import Cliente
 
 class CRUDVenta(CRUDBase[VentaTienda]):
     
-    def crear(self, db: Session, *, obj_in: dict) -> VentaTienda:
+    async def crear(self, db: Session, *, obj_in: dict) -> VentaTienda:
 
         cliente_id = obj_in.get("cliente_id")
         cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()

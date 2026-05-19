@@ -7,13 +7,13 @@ from app.models.disciplina import Disciplina
 
 class CRUDSesion(CRUDBase[SesionProgramada]):
 
-    def obtener_por_entrenador(self, db: Session, entrenador_id: int):
+    async def obtener_por_entrenador(self, db: Session, entrenador_id: int):
         return db.query(self.model).filter(
             self.model.entrenador_id == entrenador_id,
             self.model.estado != "cancelada"
         ).all()
         
-    def crear(self, db: Session, *, obj_in: dict) -> SesionProgramada:
+    async def crear(self, db: Session, *, obj_in: dict) -> SesionProgramada:
 
         entrenador_id = obj_in.get("entrenador_id")
         entrenador = db.query(Entrenador).filter(Entrenador.id == entrenador_id).first()

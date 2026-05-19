@@ -7,7 +7,7 @@ from app.models.sesion_programada import SesionProgramada # O el nombre de tu ta
 
 class CRUDReserva(CRUDBase[Reserva]):
     
-    def crear(self, db: Session, *, obj_in: dict) -> Reserva:
+    async def crear(self, db: Session, *, obj_in: dict) -> Reserva:
 
         cliente_id = obj_in.get("cliente_id")
         cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()

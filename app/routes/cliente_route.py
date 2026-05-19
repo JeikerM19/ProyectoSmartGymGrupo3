@@ -1,6 +1,8 @@
 from app.routes.crud_router import create_crud_router
 from app.schemas.cliente import CrearCliente, ActualizarCliente, RespuestaCliente
 from app.services.cliente_service import cliente_service
+from fastapi import Depends
+from app.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/cliente",
@@ -11,4 +13,9 @@ router = create_crud_router(
     tag="Cliente",
     item_name="Cliente",
     activate=True,
+    update_deps=[Depends(RoleChecker([1]))],
+    create_deps=[Depends(RoleChecker([1]))],
+    delete_deps=[Depends(RoleChecker([1]))],
+    read_deps=[Depends(RoleChecker([1]))],
+    obtein_deps=[Depends(RoleChecker([1,2]))]
 )

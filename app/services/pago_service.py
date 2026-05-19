@@ -7,7 +7,7 @@ from app.models.pago import Pago
 
 class CRUDPago(CRUDBase[Pago]):
     
-    def crear(self, db: Session, *, obj_in: dict) -> Pago:
+    async def crear(self, db: Session, *, obj_in: dict) -> Pago:
 
         usuario_id = obj_in.get("usuario_id")
         usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()

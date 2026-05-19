@@ -7,7 +7,7 @@ from app.models.cliente import Cliente
 
 class CRUDDetalleVenta(CRUDBase[MembresiaCliente]):
     
-    def crear(self, db: Session, *, obj_in: dict) -> MembresiaCliente:
+    async def crear(self, db: Session, *, obj_in: dict) -> MembresiaCliente:
 
         plan_id = obj_in.get("plan_id")
         plan = db.query(PlanSuscripcion).filter(PlanSuscripcion.id == plan_id).first()
