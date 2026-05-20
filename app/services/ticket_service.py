@@ -24,6 +24,29 @@ class CRUDTicketMantenimiento(CRUDBase[TicketMantenimiento]):
         if not maquina:
             raise HTTPException(status_code=404, detail="La máquina no existe.")
 
+        maquina.estado = "mantenimiento"
+        db.add(maquina)
+
         return await super().crear(db, obj_in=obj_in)
+
+    async def cerrar_ticket(self, db: AsyncSession, *, ticket_id: int, costo: float) -> TicketMantenimiento:
+        from datetime import datetime
+        
+        ticket = await db.get(TicketMantenimiento, ticket_id)
+        if not ticket:
+            raise HTTPException(status_code=404, detail="El ticket no existe.")
+        
+        ticket.costo = costo
+        ticket.fecha_cierre = datetime.now()
+        
+        
+        maquina = ticket.maquina
+        maquina.estado = "activa"
+        db.add(maquina)
+        
+        await db.commit()
+        await db.refresh(ticket)
+        return ticket
+    
 
 ticket_service = CRUDTicketMantenimiento(TicketMantenimiento)

@@ -33,4 +33,19 @@ class CRUDPago(CRUDBase[Pago]):
 
         return pago
 
+
+    async def actualizar(self, db: AsyncSession, *, db_obj: Pago, obj_in: dict) -> Pago:
+        raise HTTPException(
+            status_code=405, 
+            detail="No se puede modificar un pago después de creado. Los pagos son inmutables."
+        )
+    
+   
+    async def eliminacion_fisica(self, db: AsyncSession, *, id: int) -> bool:
+        raise HTTPException(
+            status_code=405,
+            detail="No se puede eliminar un pago. Los pagos son inmutables."
+        )
+
+
 pago_service = CRUDPago(Pago)

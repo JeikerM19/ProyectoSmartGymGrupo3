@@ -7,6 +7,7 @@ from app.services.base_service import CRUDBase
 from app.models.reserva import Reserva
 from app.models.cliente import Cliente
 from app.models.sesion_programada import SesionProgramada
+from app.models.membresia_cliente import MembresiaCliente
 from app.exceptions import ReglaNegocioException
 
 class CRUDReserva(CRUDBase[Reserva]):
@@ -34,6 +35,8 @@ class CRUDReserva(CRUDBase[Reserva]):
             )
 
     async def crear(self, db: AsyncSession, *, obj_in: dict) -> Reserva:
+        from datetime import date
+        
         cliente_id = obj_in.get("cliente_id")
         sesion_id = obj_in.get("sesion_id")
         
@@ -41,6 +44,22 @@ class CRUDReserva(CRUDBase[Reserva]):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Los campos 'cliente_id' y 'sesion_id' son obligatorios."
+            )
+        
+        
+        stmt_membresia = select(MembresiaCliente).where(
+            MembresiaCliente.cliente_id == cliente_id,
+            MembresiaCliente.estado == "activa",
+            MembresiaCliente.fecha_inicio <= date.today(),
+            MembresiaCliente.fecha_vencimiento >= date.today()
+        )
+        result_membresia = await db.execute(stmt_membresia)
+        membresia_activa = result_membresia.scalars().first()
+        
+        if not membresia_activa:
+            raise ReglaNegocioException(
+                codigo_interno="ERR_MEMBRESIA_INACTIVA",
+                mensaje="El cliente no tiene una membresía activa para reservar clases."
             )
         
         stmt_sesion = select(SesionProgramada).where(SesionProgramada.id == sesion_id)
@@ -99,4 +118,4 @@ class CRUDReserva(CRUDBase[Reserva]):
     async def cancelar_reserva(self, db: AsyncSession, reserva_id: int):
         return await self.eliminacion_logica(db, id=reserva_id)
 
-reserva_service = CRUDReserva(Reserva)
+reserva_service = CRUDReserva(Reserva) 
