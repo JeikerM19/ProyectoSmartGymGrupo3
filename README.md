@@ -22,4 +22,4 @@ $env:PYTHONPATH = "."
 uvicorn app.main:app --reload
 
 Login colocar los datos del seed
-Colocar el token para obtener la autorizacion
+Colocar el token para obtener la autorizacion 
