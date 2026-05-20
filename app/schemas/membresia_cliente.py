@@ -15,7 +15,6 @@ class CrearMembresia(MembresiaBase):
 class ActualizarMembresia(BaseModel):
     fecha_inicio: Optional[date] = None
     fecha_vencimiento: Optional[date] = None
-    estado: Optional[str] = None
     cliente_id: Optional[int] = None
     plan_id: Optional[int] = None
 

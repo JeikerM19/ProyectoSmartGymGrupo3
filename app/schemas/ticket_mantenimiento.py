@@ -16,7 +16,6 @@ class ActualizarTicket(BaseModel):
     usuario_id: Optional[int] = None
     fecha_cierre: Optional[datetime] = None
     costo: Optional[float] = None
-    estado: Optional[str] = None
 
 class CerrarTicket(BaseModel):
     costo: float

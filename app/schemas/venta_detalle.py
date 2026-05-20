@@ -2,12 +2,6 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
 
-class DetalleVentaSchema(BaseModel):
-    venta_id: int
-    producto_id: int
-    cantidad: int
-    precio_unitario: float
-
 class CrearVenta(BaseModel):
     venta_id: int
     producto_id: int
@@ -15,7 +9,7 @@ class CrearVenta(BaseModel):
     precio_unitario: float
 
 class ActualizarVenta(BaseModel):
-
+    venta_id: Optional[int] = None
     producto_id: Optional[int] = None
     cantidad: Optional[int] = None
     precio_unitario: Optional[float] = None

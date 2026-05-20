@@ -21,7 +21,6 @@ class ActualizarSesion(BaseModel):
     cupo_maximo: Optional[int] = None
     disciplina_id: Optional[int] = None
     entrenador_id: Optional[int] = None
-    estado: Optional[str] = None
 
 class RespuestaSesion(SesionBase):
     id: int

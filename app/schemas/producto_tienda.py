@@ -14,7 +14,6 @@ class ActualizarProducto(BaseModel):
     nombre: Optional[str] = None
     precio: Optional[float] = None
     stock: Optional[int] = None
-    estado: Optional[str] = None
 
 class RespuestaProducto(ProductoBase):
     id: int

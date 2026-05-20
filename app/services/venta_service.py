@@ -1,42 +1,34 @@
-from sqlalchemy.orm import Session
-from fastapi import HTTPException
-from app.services.base_service import CRUDBase
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.venta_tienda import VentaTienda
-from app.models.cliente import Cliente
 from app.models.detalle_venta import DetalleVenta
+from app.services.base_service import CRUDBase
+from app.services.venta_detalle_service import detalle_venta_service # Tu servicio que valida stock
 
 class CRUDVenta(CRUDBase[VentaTienda]):
-    def crear(self, db: Session, *, obj_in: dict) -> VentaTienda:
 
-        cliente_id = obj_in.get("cliente_id")
+    async def crear(self, db: AsyncSession, *, obj_in: dict) -> VentaTienda:
+        # 1. Separamos los detalles del resto de la data (la cabecera)
+        # Esto hace que 'detalles' no intente guardarse en la tabla Venta
+        detalles_lista = obj_in.pop("detalles", []) 
+        
+        # 2. Creamos el objeto de la cabecera (Tabla Venta)
+        nueva_venta = VentaTienda(**obj_in)
+        db.add(nueva_venta)
+        
+        # 3. Flusheamos para obtener el ID de la venta recién creada
+        await db.flush() 
+        
+        # 4. Ahora procesamos cada detalle (Tabla DetalleVenta)
+        for det in detalles_lista:
+            # Aquí usamos el servicio que valida y resta stock
+            # Le asignamos manualmente el ID de la venta a cada detalle
+            det["venta_id"] = nueva_venta.id
+            await detalle_venta_service.crear(db, obj_in=det)
 
-        cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
-        if not cliente:
-            raise HTTPException(status_code=404, detail="Cliente no existe")
-
-        detalles = obj_in.pop("detalles", [])
-
-        venta = VentaTienda(**obj_in)
-        db.add(venta)
-        db.flush()
-
-        total = 0
-
-        for d in detalles:
-            detalle = DetalleVenta(
-                venta_id=venta.id,
-                producto_id=d["producto_id"],
-                cantidad=d["cantidad"],
-                precio_unitario=d["precio_unitario"],
-            )
-            total += d["cantidad"] * d["precio_unitario"]
-            db.add(detalle)
-
-        venta.total = total
-
-        db.commit()
-        db.refresh(venta)
-
-        return venta
-
+        # 5. Commit final: Todo se guarda al mismo tiempo
+        await db.commit()
+        await db.refresh(nueva_venta)
+        
+        return nueva_venta
+    
 venta_service = CRUDVenta(VentaTienda)

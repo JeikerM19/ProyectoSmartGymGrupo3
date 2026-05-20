@@ -10,7 +10,6 @@ class CrearRol(RolBase):
 
 class ActualizarRol(BaseModel):
     nombre: Optional[str] = None
-    estado: Optional[str] = None
 
 class RespuestaRol(RolBase):
     id: int

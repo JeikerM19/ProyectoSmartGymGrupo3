@@ -1,36 +1,102 @@
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import HTTPException
+from fastapi import HTTPException, status
+from datetime import datetime
+
 from app.services.base_service import CRUDBase
 from app.models.reserva import Reserva
 from app.models.cliente import Cliente
 from app.models.sesion_programada import SesionProgramada
+from app.exceptions import ReglaNegocioException
 
 class CRUDReserva(CRUDBase[Reserva]):
+    
+    async def verificar_solapamiento(self, db: AsyncSession, cliente_id: int, nueva_sesion: SesionProgramada):
+        stmt = (
+            select(SesionProgramada)
+            .join(Reserva, Reserva.sesion_id == SesionProgramada.id)
+            .where(
+                Reserva.cliente_id == cliente_id,
+                Reserva.estado == "activo",
+                SesionProgramada.fecha == nueva_sesion.fecha,
+                SesionProgramada.hora_inicio < nueva_sesion.hora_fin,
+                SesionProgramada.hora_fin > nueva_sesion.hora_inicio
+            )
+        )
+        
+        result = await db.execute(stmt)
+        clase_solapada = result.scalars().first()
+        
+        if clase_solapada:
+            raise ReglaNegocioException(
+                codigo_interno="ERR_RESERVA_SOLAPAMIENTO_HORARIO",
+                mensaje="El cliente ya tiene una reserva en este bloque horario."
+            )
+
     async def crear(self, db: AsyncSession, *, obj_in: dict) -> Reserva:
-
         cliente_id = obj_in.get("cliente_id")
-        cliente_result = await db.execute(
-            select(Cliente).where(Cliente.id == cliente_id)
-        )
-        cliente = cliente_result.scalars().first()
-
-        if not cliente:
-            raise HTTPException(status_code=404, detail="El cliente no existe.")
-
         sesion_id = obj_in.get("sesion_id")
-        sesion_result = await db.execute(
-            select(SesionProgramada).where(SesionProgramada.id == sesion_id)
+        
+        if not cliente_id or not sesion_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Los campos 'cliente_id' y 'sesion_id' son obligatorios."
+            )
+        
+        stmt_sesion = select(SesionProgramada).where(SesionProgramada.id == sesion_id)
+        result_sesion = await db.execute(stmt_sesion)
+        nueva_sesion = result_sesion.scalars().first()
+        
+        if not nueva_sesion:
+            raise ReglaNegocioException(
+                codigo_interno="ERR_SESION_NO_ENCONTRADA",
+                mensaje="La sesión de clase solicitada no existe."
+            )
+            
+        if nueva_sesion.estado.lower() != "activo":
+            raise ReglaNegocioException(
+                codigo_interno="ERR_SESION_INACTIVA",
+                mensaje="No se pueden realizar reservas para una clase que no esté activa."
+            )
+
+        stmt_duplicado = select(Reserva).where(
+            Reserva.cliente_id == cliente_id,
+            Reserva.sesion_id == sesion_id,
+            Reserva.estado == "activo"
         )
-        sesion = sesion_result.scalars().first()
+        result_duplicado = await db.execute(stmt_duplicado)
+        if result_duplicado.scalars().first():
+            raise ReglaNegocioException(
+                codigo_interno="ERR_RESERVA_DUPLICADA",
+                mensaje="El cliente ya posee una reserva activa para esta clase exacta."
+            )
 
-        if not sesion:
-            raise HTTPException(status_code=404, detail="La sesión no existe.")
+        stmt_conteo = select(func.count(Reserva.id)).where(
+            Reserva.sesion_id == sesion_id,
+            Reserva.estado == "activo"
+        )
+        result_conteo = await db.execute(stmt_conteo)
+        total_reservas = result_conteo.scalar() or 0
 
-        return await super().crear(db, obj_in=obj_in)
+        if total_reservas >= nueva_sesion.cupo_maximo:
+            raise ReglaNegocioException(
+                codigo_interno="ERR_CLASE_LLENA",
+                mensaje=f"La sesión ha alcanzado su límite máximo de {nueva_sesion.cupo_maximo} cupos."
+            )
+
+        await self.verificar_solapamiento(db, cliente_id=cliente_id, nueva_sesion=nueva_sesion)
+        
+        obj_in["fecha_reserva"] = datetime.now()
+        obj_in["estado"] = "activo"
+        
+        nueva_reserva = Reserva(**obj_in)
+        db.add(nueva_reserva)
+        await db.commit()
+        await db.refresh(nueva_reserva)
+        
+        return nueva_reserva
 
     async def cancelar_reserva(self, db: AsyncSession, reserva_id: int):
-
         return await self.eliminacion_logica(db, id=reserva_id)
 
 reserva_service = CRUDReserva(Reserva)

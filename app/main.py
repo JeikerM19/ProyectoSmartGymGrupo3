@@ -1,9 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from fastapi.security import HTTPBearer
 import app.models
 from app.db.base import Base
 from app.db.session import engine
+from fastapi.responses import JSONResponse
+from app.exceptions import ReglaNegocioException
 from app.routes.maquina_route import router as maquina_router
 from app.routes.categoria_route import router as categoria_router
 from app.routes.cliente_route import router as cliente_router
@@ -59,6 +61,19 @@ app.include_router(venta_router)
 app.include_router(venta_detalle_router)
 app.include_router(ticket_router)
 
+
+
+@app.exception_handler(ReglaNegocioException)
+async def regla_negocio_exception_handler(request: Request, exc: ReglaNegocioException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": exc.error,
+            "codigolnterno": exc.codigo_interno,
+            "mensaje": exc.mensaje,
+            "timestamp": exc.timestamp
+        }
+    )
 @app.get("/")
 async def read_root():
     return {"message": "¡API de SmartGym funcionando perfectamente!"}

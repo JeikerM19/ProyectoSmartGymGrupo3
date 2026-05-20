@@ -14,7 +14,6 @@ class ActualizarPlan(BaseModel):
     nombre: Optional[str] = None
     precio: Optional[float] = None
     duracion_dias: Optional[int] = None
-    estado: Optional[str] = None
 
 class RespuestaPlan(PlanBase):
     id: int
