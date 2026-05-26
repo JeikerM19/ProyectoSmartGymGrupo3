@@ -2,7 +2,7 @@ from app.routes.crud_router import create_crud_router
 from app.schemas.membresia_cliente import CrearMembresia, RespuestaMembresia, ActualizarMembresia
 from app.services.membresia_service import membresia_service
 from fastapi import Depends
-from app.deps import RoleChecker
+from app.core.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/membresias",

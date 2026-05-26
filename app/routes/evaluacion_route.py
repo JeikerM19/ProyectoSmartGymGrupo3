@@ -2,7 +2,7 @@ from app.routes.crud_router import create_crud_router
 from app.schemas.evaluacion_biometrica import CrearEvaluacion, ActualizarEvaluacion, RespuestaEvaluacion
 from app.services.evaluacion_service import evaluacion_service
 from fastapi import Depends
-from app.deps import RoleChecker
+from app.core.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/evaluaciones_biometricas",

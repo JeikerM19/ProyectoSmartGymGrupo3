@@ -2,7 +2,7 @@ from app.routes.crud_router import create_crud_router
 from app.schemas.rol import CrearRol, ActualizarRol, RespuestaRol
 from app.services.roles_service import rol_service
 from fastapi import Depends
-from app.deps import RoleChecker
+from app.core.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/roles",

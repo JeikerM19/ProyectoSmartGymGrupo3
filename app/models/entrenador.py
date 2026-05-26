@@ -6,8 +6,9 @@ class Entrenador(Base):
     __tablename__ = "entrenadores"
 
     id = Column(Integer, primary_key=True)
-    especialidad = Column(String, nullable=False)
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, unique=True)
-    estado = Column(String, default="activo")
+    especialidad = Column(String(100), nullable=False)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, unique=True, index=True)
+    estado = Column(String(20), default="activo", nullable=False)
+
     usuario = relationship("Usuario", back_populates="entrenador")
     sesiones = relationship("SesionProgramada", back_populates="entrenador")

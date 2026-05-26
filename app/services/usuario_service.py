@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from app.services.base_service import CRUDBase
 from app.models.usuario import Usuario
 from app.models.rol import Rol
-from app.security import hash_password
+from app.core.security import hash_password
 
 class CRUDUsuario(CRUDBase[Usuario]):
     async def crear(self, db: AsyncSession, *, obj_in: dict) -> Usuario:

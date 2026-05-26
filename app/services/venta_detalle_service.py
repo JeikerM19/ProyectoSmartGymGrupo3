@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.base_service import CRUDBase
 from app.models.detalle_venta import DetalleVenta
 from app.models.producto_tienda import ProductoTienda
-from app.exceptions import ReglaNegocioException
+from app.core.exceptions import ReglaNegocioException
 
 class CRUDDetalleVenta(CRUDBase[DetalleVenta]):
 

@@ -1,25 +1,24 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
 
 class PagoBase(BaseModel):
-    monto: float
-    metodo_pago: str
+    monto: float = Field(..., gt=0)
+    metodo_pago: str = Field(..., min_length=3, max_length=30)
     membresia_id: int
 
 class CrearPago(PagoBase):
     pass
 
 class ActualizarPago(BaseModel):
-    monto: Optional[float] = None
-    metodo_pago: Optional[str] = None
+    monto: Optional[float] = Field(None, gt=0)
+    metodo_pago: Optional[str] = Field(None, min_length=3, max_length=30)
     membresia_id: Optional[int] = None
-    fecha_pago: Optional[datetime] = None
 
 class RespuestaPago(PagoBase):
     id: int
     fecha_pago: datetime
-    estado: Optional[str] = None
+    estado: str
 
     class Config:
         from_attributes = True

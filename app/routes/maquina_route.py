@@ -3,7 +3,7 @@ from app.schemas.maquina import CrearMaquina, RespuestaMaquina, ActualizarMaquin
 from app.schemas.estado import CambiarEstado
 from app.services.maquina_service import maquina_service
 from fastapi import Depends
-from app.deps import RoleChecker
+from app.core.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/maquinas",

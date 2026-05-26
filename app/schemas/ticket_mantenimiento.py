@@ -1,9 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
 
 class TicketBase(BaseModel):
-    descripcion: str
+    descripcion: str = Field(..., min_length=5, max_length=255)
     maquina_id: int
     usuario_id: int
 
@@ -11,21 +11,22 @@ class CrearTicket(TicketBase):
     pass
 
 class ActualizarTicket(BaseModel):
-    descripcion: Optional[str] = None
+    descripcion: Optional[str] = Field(None, min_length=5, max_length=255)
     maquina_id: Optional[int] = None
     usuario_id: Optional[int] = None
     fecha_cierre: Optional[datetime] = None
-    costo: Optional[float] = None
+    costo: Optional[float] = Field(None, ge=0)
+    estado: Optional[str] = None
 
 class CerrarTicket(BaseModel):
-    costo: float
+    costo: float = Field(..., ge=0)
 
 class RespuestaTicket(TicketBase):
     id: int
     fecha_apertura: datetime
     fecha_cierre: Optional[datetime] = None
     costo: Optional[float] = None
-    estado: Optional[str] = None
+    estado: str
 
     class Config:
         from_attributes = True

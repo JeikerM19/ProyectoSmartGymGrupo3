@@ -7,9 +7,9 @@ class ControlAcceso(Base):
     __tablename__ = "control_accesos"
 
     id = Column(Integer, primary_key=True)
-    fecha_hora = Column(DateTime, nullable=False,server_default=func.now())
+    fecha_hora = Column(DateTime, nullable=False, server_default=func.now())
+    mensaje = Column(String(255), nullable=True)
     cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False, index=True)
-    mensaje= Column(String, nullable=True)
-    estado = Column(String, default="activo")
-    cliente = relationship("Cliente", back_populates="accesos")
+    estado = Column(String(20), default="activo", nullable=False)
 
+    cliente = relationship("Cliente", back_populates="accesos")

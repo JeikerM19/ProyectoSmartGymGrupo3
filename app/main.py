@@ -5,7 +5,7 @@ import app.models
 from app.db.base import Base
 from app.db.session import engine
 from fastapi.responses import JSONResponse
-from app.exceptions import ReglaNegocioException
+from app.core.exceptions import ReglaNegocioException
 from app.routes.maquina_route import router as maquina_router
 from app.routes.categoria_route import router as categoria_router
 from app.routes.cliente_route import router as cliente_router
@@ -42,23 +42,23 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="SmartGym API", lifespan=lifespan)
 app.include_router(auth_route)
-app.include_router(maquina_router)
-app.include_router(categoria_router)
-app.include_router(cliente_router)
-app.include_router(control_router)
-app.include_router(disciplinas_router)
-app.include_router(entrenador_router)
-app.include_router(evaluacion_router)
-app.include_router(membresia_router)
 app.include_router(rol_router)
-app.include_router(pago_router)
-app.include_router(plan_router)
-app.include_router(producto_router)
-app.include_router(reserva_router)
-app.include_router(sesion_router)
 app.include_router(usuario_router)
+app.include_router(cliente_router)
+app.include_router(entrenador_router)
+app.include_router(disciplinas_router)
+app.include_router(sesion_router)
+app.include_router(reserva_router)
+app.include_router(categoria_router)
+app.include_router(maquina_router)
+app.include_router(membresia_router)
+app.include_router(pago_router)
+app.include_router(producto_router)
 app.include_router(venta_router)
 app.include_router(venta_detalle_router)
+app.include_router(evaluacion_router)
+app.include_router(plan_router)
+app.include_router(control_router)
 app.include_router(ticket_router)
 
 

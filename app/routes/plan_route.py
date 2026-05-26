@@ -2,7 +2,7 @@ from app.routes.crud_router import create_crud_router
 from app.schemas.plan_suscripcion import CrearPlan, ActualizarPlan, RespuestaPlan
 from app.services.plan_service import plan
 from fastapi import Depends
-from app.deps import RoleChecker
+from app.core.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/planes",

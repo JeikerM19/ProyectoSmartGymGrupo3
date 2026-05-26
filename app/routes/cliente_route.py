@@ -2,7 +2,7 @@ from app.routes.crud_router import create_crud_router
 from app.schemas.cliente import CrearCliente, ActualizarCliente, RespuestaCliente
 from app.services.cliente_service import cliente_service
 from fastapi import Depends
-from app.deps import RoleChecker
+from app.core.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/cliente",

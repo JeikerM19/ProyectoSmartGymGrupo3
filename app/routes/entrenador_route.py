@@ -2,7 +2,7 @@ from app.routes.crud_router import create_crud_router
 from app.schemas.entrenador import CrearEntrenador, ActualizarEntrenador, RespuestaEntrenador
 from app.services.entrenador_service import entrenador_service
 from fastapi import Depends
-from app.deps import RoleChecker
+from app.core.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/entrenadores",

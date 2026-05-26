@@ -8,7 +8,7 @@ from app.models.reserva import Reserva
 from app.models.cliente import Cliente
 from app.models.sesion_programada import SesionProgramada
 from app.models.membresia_cliente import MembresiaCliente
-from app.exceptions import ReglaNegocioException
+from app.core.exceptions import ReglaNegocioException
 
 class CRUDReserva(CRUDBase[Reserva]):
     

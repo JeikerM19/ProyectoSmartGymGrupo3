@@ -4,9 +4,9 @@ from app.db.base import Base
 
 class Rol(Base):
     __tablename__ = "roles"
-    
+
     id = Column(Integer, primary_key=True)
-    nombre = Column(String, unique=True, nullable=False)
-    estado = Column(String, default="activo")
-    usuarios = relationship("Usuario",back_populates="rol")
-    
+    nombre = Column(String(50), unique=True, nullable=False, index=True)
+    estado = Column(String(20), default="activo", nullable=False)
+
+    usuarios = relationship("Usuario", back_populates="rol")

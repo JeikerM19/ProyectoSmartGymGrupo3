@@ -1,20 +1,20 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 class CategoriaBase(BaseModel):
-    nombre: str
-    descripcion: Optional[str] = None
+    nombre: str = Field(..., min_length=2, max_length=100)
+    descripcion: Optional[str] = Field(None, max_length=255)
 
 class CrearCategoria(CategoriaBase):
     pass
 
 class ActualizarCategoria(BaseModel):
-    nombre: Optional[str] = None
-    descripcion: Optional[str] = None
+    nombre: Optional[str] = Field(None, min_length=2, max_length=100)
+    descripcion: Optional[str] = Field(None, max_length=255)
 
 class RespuestaCategoria(CategoriaBase):
     id: int
-    estado: Optional[str] = None
+    estado: str
 
     class Config:
         from_attributes = True

@@ -6,7 +6,8 @@ class Disciplina(Base):
     __tablename__ = "disciplinas"
 
     id = Column(Integer, primary_key=True)
-    nombre = Column(String, nullable=False,unique=True)
-    descripcion = Column(String,nullable=True)
-    estado = Column(String, default="activo")
+    nombre = Column(String(100), nullable=False, unique=True, index=True)
+    descripcion = Column(String(255), nullable=True)
+    estado = Column(String(20), default="activo", nullable=False)
+
     sesiones = relationship("SesionProgramada", back_populates="disciplina")

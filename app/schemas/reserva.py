@@ -12,6 +12,7 @@ class CrearReserva(ReservaBase):
 class ActualizarReserva(BaseModel):
     cliente_id: Optional[int] = None
     sesion_id: Optional[int] = None
+    estado: Optional[str] = None
 
 class RespuestaReserva(ReservaBase):
     id: int

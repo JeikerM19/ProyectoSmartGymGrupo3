@@ -29,7 +29,7 @@ from app.models.venta_tienda import VentaTienda
 from app.models.detalle_venta import DetalleVenta
 from app.models.evaluacion_biometrica import EvaluacionBiometrica
 
-from app.security import hash_password
+from app.core.security import hash_password
 from app.core.config import settings
 
 DATABASE_URL = settings.database_url
@@ -40,6 +40,7 @@ SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=F
 
 
 async def seed():
+
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
@@ -50,68 +51,81 @@ async def seed():
             print("INFO: La base de datos ya tiene datos.")
             return
 
-        admin_rol = Rol(nombre="Administrador")
-        entrenador_rol = Rol(nombre="Entrenador")
-        cliente_rol = Rol(nombre="Cliente")
+        admin_rol = Rol(nombre="Administrador", estado="activo")
+
+        entrenador_rol = Rol(nombre="Entrenador", estado="activo")
+
+        cliente_rol = Rol(nombre="Cliente", estado="activo")
 
         session.add_all([admin_rol, entrenador_rol, cliente_rol])
+
         await session.flush()
 
         admin_user = Usuario(
             nombre="Alex Admin",
             email="admin@gym.com",
-            password=hash_password("12345"),
+            hashed_password=hash_password("Admin123*"),
             rol_id=admin_rol.id,
             estado="activo",
         )
+
         entrenador_user = Usuario(
             nombre="Carlos Entrenador",
             email="carlos@gym.com",
-            password=hash_password("12345"),
+            hashed_password=hash_password("Entrenador123*"),
             rol_id=entrenador_rol.id,
             estado="activo",
         )
+
         cliente_user = Usuario(
             nombre="Manuel Cliente",
             email="manuel@gym.com",
-            password=hash_password("12345"),
+            hashed_password=hash_password("Cliente123*"),
             rol_id=cliente_rol.id,
             estado="activo",
         )
 
         session.add_all([admin_user, entrenador_user, cliente_user])
+
         await session.flush()
 
         perfil_entrenador = Entrenador(
-            especialidad="Crossfit Avanzado", usuario_id=entrenador_user.id
+            especialidad="Crossfit Avanzado",
+            usuario_id=entrenador_user.id,
+            estado="activo",
         )
 
         perfil_cliente = Cliente(
             cedula="V-12345678",
-            nombre_completo="Manuel Jose Perez",
-            email="manuel@gym.com",
             telefono="0414-1234567",
             fecha_registro=date.today(),
             usuario_id=cliente_user.id,
+            estado="activo",
         )
 
         session.add_all([perfil_entrenador, perfil_cliente])
+
         await session.flush()
 
         cat_cardio = CategoriaMaquina(
-            nombre="Cardio", descripcion="Máquinas de resistencia cardiovascular"
+            nombre="Cardio",
+            descripcion="Máquinas de resistencia cardiovascular",
+            estado="activo",
         )
 
         session.add(cat_cardio)
+
         await session.flush()
 
         caminadora = Maquina(
             nombre="Caminadora Pro",
             descripcion="Cinta de correr con inclinación",
             categoria_id=cat_cardio.id,
+            estado="activo",
         )
 
         session.add(caminadora)
+
         await session.flush()
 
         ticket = TicketMantenimiento(
@@ -120,31 +134,39 @@ async def seed():
             costo=150.00,
             maquina_id=caminadora.id,
             usuario_id=admin_user.id,
+            estado="activo",
         )
 
         session.add(ticket)
 
-        crossfit = Disciplina(nombre="Crossfit", descripcion="Entrenamiento funcional")
+        crossfit = Disciplina(
+            nombre="Crossfit", descripcion="Entrenamiento funcional", estado="activo"
+        )
 
         session.add(crossfit)
+
         await session.flush()
 
         sesion_hoy = SesionProgramada(
+            nombre="Extreme Bike",
             fecha=date.today(),
             hora_inicio=time(18, 0),
             hora_fin=time(19, 0),
             cupo_maximo=20,
             disciplina_id=crossfit.id,
             entrenador_id=perfil_entrenador.id,
+            estado="activo",
         )
 
         session.add(sesion_hoy)
+
         await session.flush()
 
         reserva = Reserva(
             fecha_reserva=datetime.utcnow(),
             cliente_id=perfil_cliente.id,
             sesion_id=sesion_hoy.id,
+            estado="activo",
         )
 
         session.add(reserva)
@@ -156,6 +178,7 @@ async def seed():
             porcentaje_grasa=16.5,
             cliente_id=perfil_cliente.id,
             observaciones="Buen avance muscular",
+            estado="activo",
         )
 
         session.add(evaluacion)
@@ -163,26 +186,29 @@ async def seed():
         acceso = ControlAcceso(
             cliente_id=perfil_cliente.id,
             mensaje="Acceso permitido - Mensualidad al día",
+            estado="activo",
         )
 
         session.add(acceso)
 
         plan_basico = PlanSuscripcion(
-            nombre="Mensualidad Básica", precio=35.00, duracion_dias=30
+            nombre="Mensualidad Básica", precio=35.00, duracion_dias=30, estado="activo"
         )
 
         session.add(plan_basico)
+
         await session.flush()
 
         membresia = MembresiaCliente(
             fecha_inicio=date.today(),
             fecha_vencimiento=date.today() + timedelta(days=30),
-            estado="Activa",
+            estado="activa",
             cliente_id=perfil_cliente.id,
             plan_id=plan_basico.id,
         )
 
         session.add(membresia)
+
         await session.flush()
 
         pago = Pago(
@@ -190,22 +216,31 @@ async def seed():
             metodo_pago="Zelle",
             membresia_id=membresia.id,
             usuario_id=admin_user.id,
+            estado="activo",
         )
 
         session.add(pago)
 
-        agua = ProductoTienda(nombre="Botella de Agua 1L", precio=1.50, stock=100)
+        agua = ProductoTienda(
+            nombre="Botella de Agua 1L", precio=1.50, stock=100, estado="activo"
+        )
 
         session.add(agua)
+
         await session.flush()
 
-        venta = VentaTienda(total=3.00, cliente_id=perfil_cliente.id)
+        venta = VentaTienda(total=3.00, cliente_id=perfil_cliente.id, estado="activo")
 
         session.add(venta)
+
         await session.flush()
 
         detalle = DetalleVenta(
-            cantidad=2, precio_unitario=1.50, venta_id=venta.id, producto_id=agua.id
+            cantidad=2,
+            precio_unitario=1.50,
+            venta_id=venta.id,
+            producto_id=agua.id,
+            estado="activo",
         )
 
         session.add(detalle)
@@ -213,7 +248,6 @@ async def seed():
         await session.commit()
 
         print("¡ÉXITO! Seed ejecutado correctamente.")
-
 
 if __name__ == "__main__":
     asyncio.run(seed())

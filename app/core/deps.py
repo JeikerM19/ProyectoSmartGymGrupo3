@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer # Cambiamos a HTTPBearer
-from app.security import decode_token
+from app.core.security import decode_token
 
 # 1. Este cambio es la clave: HTTPBearer activa el cuadro de "Value" en Swagger
 # Ya no te pedirá username ni password.
@@ -14,6 +14,7 @@ class RoleChecker:
     async def __call__(self, token: str = Depends(security_scheme)):
         # Extraemos el string del token de las credenciales
         payload = decode_token(token.credentials)
+        print(payload)
         
         if not payload:
             raise HTTPException(
