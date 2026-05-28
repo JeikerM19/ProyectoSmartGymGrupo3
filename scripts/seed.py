@@ -64,7 +64,7 @@ async def seed():
         admin_user = Usuario(
             nombre="Alex Admin",
             email="admin@gym.com",
-            hashed_password=hash_password("Admin123*"),
+            password=hash_password("Admin123*"),
             rol_id=admin_rol.id,
             estado="activo",
         )
@@ -72,7 +72,7 @@ async def seed():
         entrenador_user = Usuario(
             nombre="Carlos Entrenador",
             email="carlos@gym.com",
-            hashed_password=hash_password("Entrenador123*"),
+            password=hash_password("Entrenador123*"),
             rol_id=entrenador_rol.id,
             estado="activo",
         )
@@ -80,7 +80,7 @@ async def seed():
         cliente_user = Usuario(
             nombre="Manuel Cliente",
             email="manuel@gym.com",
-            hashed_password=hash_password("Cliente123*"),
+            password=hash_password("Cliente123*"),
             rol_id=cliente_rol.id,
             estado="activo",
         )
@@ -202,7 +202,7 @@ async def seed():
         membresia = MembresiaCliente(
             fecha_inicio=date.today(),
             fecha_vencimiento=date.today() + timedelta(days=30),
-            estado="activa",
+            estado="activo",
             cliente_id=perfil_cliente.id,
             plan_id=plan_basico.id,
         )
@@ -237,7 +237,6 @@ async def seed():
 
         detalle = DetalleVenta(
             cantidad=2,
-            precio_unitario=1.50,
             venta_id=venta.id,
             producto_id=agua.id,
             estado="activo",

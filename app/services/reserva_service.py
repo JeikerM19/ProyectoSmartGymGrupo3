@@ -49,7 +49,7 @@ class CRUDReserva(CRUDBase[Reserva]):
         
         stmt_membresia = select(MembresiaCliente).where(
             MembresiaCliente.cliente_id == cliente_id,
-            MembresiaCliente.estado == "activa",
+            MembresiaCliente.estado == "activo",
             MembresiaCliente.fecha_inicio <= date.today(),
             MembresiaCliente.fecha_vencimiento >= date.today()
         )

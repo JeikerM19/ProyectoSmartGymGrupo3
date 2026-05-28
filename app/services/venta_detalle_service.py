@@ -32,6 +32,10 @@ class CRUDDetalleVenta(CRUDBase[DetalleVenta]):
         nuevo_detalle = DetalleVenta(**obj_in)
         db.add(nuevo_detalle)
         
+        await db.commit() 
+        
+        await db.refresh(nuevo_detalle)
+        
         return nuevo_detalle
 
 detalle_venta_service = CRUDDetalleVenta(DetalleVenta)

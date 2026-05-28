@@ -10,12 +10,12 @@ router = create_crud_router(
     create_schema=CrearDetalleVenta,
     update_schema=ActualizarDetalleVenta,
     read_schema=RespuestaDetalleVenta,
-    tag="Ventas",
-    item_name="venta",
+    tag="Detalles Ventas",
+    item_name="venta_detalle",
     activate=True,
     update_deps=[Depends(RoleChecker([1,4]))],
     create_deps=[Depends(RoleChecker([1,4]))],
-    delete_deps=[Depends(RoleChecker([4]))],
-    read_deps=[Depends(RoleChecker([4]))],
-    obtein_deps=[Depends(RoleChecker([4]))]
+    delete_deps=[Depends(RoleChecker([1,4]))],
+    read_deps=[Depends(RoleChecker([1,4]))],
+    obtein_deps=[Depends(RoleChecker([1,4]))]
 )

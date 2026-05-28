@@ -1,12 +1,12 @@
 from app.routes.crud_router import create_crud_router
 from app.schemas.pago import CrearPago, ActualizarPago, RespuestaPago
-from app.services.pago_service import Pago
+from app.services.pago_service import pago_service
 from fastapi import Depends
 from app.core.deps import RoleChecker
 
 router = create_crud_router(
     prefix="/api/v1/pagos",
-    service=Pago,
+    service=pago_service,
     create_schema=CrearPago,
     update_schema=ActualizarPago,
     read_schema=RespuestaPago,

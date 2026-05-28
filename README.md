@@ -17,7 +17,7 @@ Configurar .env
 Crear la base de datos
 
 $env:PYTHONPATH = "."
-.\venv\Scripts\python.exe scripts/seed.py
+.\.venv\Scripts\python.exe scripts/seed.py
 
 uvicorn app.main:app --reload
 

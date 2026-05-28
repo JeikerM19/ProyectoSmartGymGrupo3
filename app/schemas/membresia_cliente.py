@@ -7,7 +7,7 @@ class MembresiaBase(BaseModel):
     fecha_vencimiento: date
     cliente_id: int
     plan_id: int
-    estado: Optional[str] = "activa"
+    estado: Optional[str] = "activo"
 
     @model_validator(mode="after")
     def validar_fechas(self):

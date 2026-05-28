@@ -38,7 +38,7 @@ class CRUDControlAcceso(CRUDBase[ControlAcceso]):
         # 3. Validación de la Regla de Negocio (Estado y Fecha de Vencimiento)
         hoy = date.today()
         
-        if membresia.estado.lower() != "activa":
+        if membresia.estado.lower() != "activo":
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Acceso denegado: La membresía se encuentra en estado '{membresia.estado}'."

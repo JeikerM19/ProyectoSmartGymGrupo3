@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 
 class TicketBase(BaseModel):
@@ -8,7 +8,9 @@ class TicketBase(BaseModel):
     usuario_id: int
 
 class CrearTicket(TicketBase):
-    pass
+    fecha_apertura: datetime
+    fecha_cierre: datetime
+    costo: float
 
 class ActualizarTicket(BaseModel):
     descripcion: Optional[str] = Field(None, min_length=5, max_length=255)

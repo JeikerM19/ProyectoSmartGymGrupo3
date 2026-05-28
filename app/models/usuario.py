@@ -8,7 +8,7 @@ class Usuario(Base):
     id = Column(Integer, primary_key=True)
     nombre = Column(String(100), nullable=False)
     email = Column(String(120), unique=True, nullable=False, index=True)
-    hashed_password = Column(String, nullable=False)
+    password = Column(String, nullable=False)
     rol_id = Column(Integer, ForeignKey("roles.id"), nullable=False, index=True)
     estado = Column(String(20), default="activo", nullable=False)
 
