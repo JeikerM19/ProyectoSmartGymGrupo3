@@ -20,6 +20,8 @@ def create_crud_router(
     delete_deps: Optional[list[params.Depends]] = None,
     read_deps: Optional[list[params.Depends]] = None,
     obtein_deps: Optional[list[params.Depends]] = None,
+    allow_update: bool = True,
+    allow_delete: bool = True,
 ) -> APIRouter:
     router = APIRouter(prefix=prefix, tags=[tag])
 
@@ -38,12 +40,27 @@ def create_crud_router(
     async def crear(obj_in: create_schema, db: AsyncSession = Depends(get_db)):
         return await service.crear(db, obj_in=obj_in.model_dump(exclude_none=True))
 
-    @router.put("/{item_id}", response_model=read_schema,dependencies=update_deps)
-    async def actualizar(item_id: int, obj_in: update_schema, db: AsyncSession = Depends(get_db)):
-        item = await service.obtener(db, item_id)
-        if not item:
-            raise HTTPException(status_code=404, detail=f"{item_name.capitalize()} no encontrado")
-        return await service.actualizar(db, db_obj=item, obj_in=obj_in.model_dump(exclude_none=True))
+    if allow_update:
+
+        @router.put("/{item_id}", response_model=read_schema, dependencies=update_deps)
+        async def actualizar(
+            item_id: int,
+            obj_in: update_schema,
+            db: AsyncSession = Depends(get_db)
+        ):
+            item = await service.obtener(db, item_id)
+
+            if not item:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"{item_name.capitalize()} no encontrado"
+                )
+
+            return await service.actualizar(
+                db,
+                db_obj=item,
+                obj_in=obj_in.model_dump(exclude_none=True)
+            )
 
     if state_schema is not None:
         @router.put("/{item_id}/estado", response_model=read_schema,dependencies=update_deps)
@@ -61,12 +78,21 @@ def create_crud_router(
                 raise HTTPException(status_code=400, detail=f"{item_name.capitalize()} no encontrado o no está en estado 'inactivo'")
             return item
 
-    @router.delete("/{item_id}", dependencies=delete_deps)
-    async def eliminar(item_id: int, db: AsyncSession = Depends(get_db)):
-        deleted = await service.eliminacion_fisica(db, id=item_id)
-        if not deleted:
-            raise HTTPException(status_code=404, detail=f"{item_name.capitalize()} no encontrado")
-        return {"detail": f"{item_name.capitalize()} eliminada"}
+    if allow_delete:
+
+        @router.delete("/{item_id}", dependencies=delete_deps)
+        async def eliminar(item_id: int, db: AsyncSession = Depends(get_db)):
+            deleted = await service.eliminacion_fisica(db, id=item_id)
+
+            if not deleted:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"{item_name.capitalize()} no encontrado"
+                )
+
+            return {
+                "detail": f"{item_name.capitalize()} eliminada"
+            }
 
     @router.put("/{item_id}/desactivar", dependencies=update_deps)
     async def desactivar(item_id: int, db: AsyncSession = Depends(get_db)):

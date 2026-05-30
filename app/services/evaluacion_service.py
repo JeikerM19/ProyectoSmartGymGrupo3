@@ -9,9 +9,11 @@ class CRUDEvaluacion(CRUDBase[EvaluacionBiometrica]):
     async def crear(self, db: AsyncSession, *, obj_in: dict) -> EvaluacionBiometrica:
 
         cliente_id = obj_in.get("cliente_id")
+
         result = await db.execute(select(Cliente).where(Cliente.id == cliente_id))
+
         cliente = result.scalars().first()
-        
+
         if not cliente:
             raise HTTPException(status_code=404, detail="El cliente no existe.")
 
