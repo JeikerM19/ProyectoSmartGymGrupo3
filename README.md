@@ -1,4 +1,3 @@
-````md
 # SmartGym API
 
 API REST desarrollada con FastAPI para la gestión integral de gimnasios. El sistema permite administrar usuarios, roles, clientes, entrenadores, máquinas, clases, reservas, membresías, pagos, control de acceso, mantenimiento y ventas de productos.
@@ -9,14 +8,14 @@ La API implementa autenticación mediante JWT, control de acceso basado en roles
 
 ## Tecnologías utilizadas
 
-- FastAPI
-- PostgreSQL
-- SQLAlchemy
-- Alembic
-- Pydantic
-- JWT Authentication
-- Swagger / OpenAPI
-- Docker
+* FastAPI
+* PostgreSQL
+* SQLAlchemy
+* Alembic
+* Pydantic
+* JWT Authentication
+* Swagger / OpenAPI
+* Docker
 
 ---
 
@@ -45,7 +44,7 @@ La API implementa autenticación mediante JWT, control de acceso basado en roles
 ├── Dockerfile
 ├── requirements.txt
 └── README.md
-````
+```
 
 ---
 
@@ -73,8 +72,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES=60
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <https://github.com/laboratorio-1-2026-1/lab1-proyecto-2026-1-32023320-30754077-30716524.git>
-cd lab1-proyecto
+git clone https://github.com/laboratorio-1-2026-1/lab1-proyecto-2026-1-32023320-30754077-30716524.git
+cd lab1-proyecto-2026-1-32023320-30754077-30716524
 ```
 
 ### 2. Crear entorno virtual
@@ -262,17 +261,9 @@ alembic upgrade head
 
 ## Integrantes
 
-**Barreto, Alex**
-C.I: 32.023.320
-
-**Fuentes, Manuel**
-C.I: 30.754.077
-
-**Alaña, José**
-C.I: 30.716.524
+* **Barreto, Alex** — C.I: 32.023.320
+* **Fuentes, Manuel** — C.I: 30.754.077
+* **Alaña, José** — C.I: 30.716.524
 
 Universidad Centroccidental Lisandro Alvarado (UCLA)
 Laboratorio I — 2026-1
-
-```
-```
