@@ -261,9 +261,11 @@ alembic upgrade head
 
 ## Integrantes
 
-* **Barreto, Alex** — C.I: 32.023.320
-* **Fuentes, Manuel** — C.I: 30.754.077
-* **Alaña, José** — C.I: 30.716.524
+| Nombre | Cédula |
+|----------|----------|
+| Alex Barreto | 32.023.320 |
+| Manuel Fuentes | 30.754.077 |
+| José Alaña | 30.716.524 |
 
 Universidad Centroccidental Lisandro Alvarado (UCLA)
 Laboratorio I — 2026-1
