@@ -2,6 +2,12 @@ from pydantic import BaseModel, Field
 from datetime import datetime, date
 from typing import Optional
 
+class MaquinaRelacionResponse(BaseModel):
+    id: int
+    nombre: str 
+    descripcion: str 
+
+
 class TicketBase(BaseModel):
     descripcion: str = Field(..., min_length=5, max_length=255)
     maquina_id: int
@@ -28,6 +34,7 @@ class RespuestaTicket(TicketBase):
     fecha_apertura: datetime
     fecha_cierre: Optional[datetime] = None
     costo: Optional[float] = None
+    maquina: Optional[MaquinaRelacionResponse] = None
     estado: str
 
     class Config:

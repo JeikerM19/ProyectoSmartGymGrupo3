@@ -1,6 +1,11 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 
+class ProductoRelacionResponse(BaseModel):
+    id: int
+    nombre: str 
+    precio: float 
+
 class DetalleVentaBase(BaseModel):
     venta_id: int
     producto_id: int
@@ -18,6 +23,6 @@ class ActualizarDetalleVenta(BaseModel):
 class RespuestaDetalleVenta(DetalleVentaBase):
     id: int
     estado: str
-
+    producto: Optional[ProductoRelacionResponse] = None
     class Config:
         from_attributes = True
