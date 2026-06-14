@@ -1,8 +1,9 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime, date
 from typing import Optional
 
 class MaquinaRelacionResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     nombre: str 
     descripcion: str 

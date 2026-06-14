@@ -12,7 +12,7 @@ class Cliente(Base):
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, unique=True, index=True)
     estado = Column(String(20), default="activo", nullable=False)
 
-    usuario = relationship("Usuario", back_populates="cliente")
+    usuario = relationship("Usuario", back_populates="cliente", lazy="joined")
     reservas = relationship("Reserva", back_populates="cliente")
     membresias = relationship("MembresiaCliente", back_populates="cliente")
     evaluaciones = relationship("EvaluacionBiometrica", back_populates="cliente")

@@ -15,5 +15,5 @@ class TicketMantenimiento(Base):
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, index=True)
     estado = Column(String(20), default="activo", nullable=False)
 
-    maquina = relationship("Maquina", back_populates="tickets")
-    usuario = relationship("Usuario", back_populates="tickets_mantenimiento")
+    maquina = relationship("Maquina", back_populates="tickets", lazy="joined")
+    usuario = relationship("Usuario", back_populates="tickets_mantenimiento", lazy="joined")

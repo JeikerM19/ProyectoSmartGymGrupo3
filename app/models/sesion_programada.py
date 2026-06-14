@@ -16,6 +16,6 @@ class SesionProgramada(Base):
     entrenador_id = Column(Integer, ForeignKey("entrenadores.id"), nullable=False, index=True)
     estado = Column(String(20), default="activo", nullable=False)
 
-    disciplina = relationship("Disciplina", back_populates="sesiones")
-    entrenador = relationship("Entrenador", back_populates="sesiones")
+    disciplina = relationship("Disciplina", back_populates="sesiones", lazy="joined")
+    entrenador = relationship("Entrenador", back_populates="sesiones", lazy="joined")
     reservas = relationship("Reserva", back_populates="sesion")

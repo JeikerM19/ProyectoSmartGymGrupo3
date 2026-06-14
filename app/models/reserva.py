@@ -11,5 +11,5 @@ class Reserva(Base):
     sesion_id = Column(Integer, ForeignKey("sesiones_programadas.id"), nullable=False, index=True)
     estado = Column(String(20), default="activo", nullable=False)
 
-    cliente = relationship("Cliente", back_populates="reservas")
-    sesion = relationship("SesionProgramada", back_populates="reservas")
+    cliente = relationship("Cliente", back_populates="reservas", lazy="joined")
+    sesion = relationship("SesionProgramada", back_populates="reservas", lazy="joined")

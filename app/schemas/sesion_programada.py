@@ -1,8 +1,10 @@
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, model_validator, ConfigDict
 from datetime import date, time
 from typing import Optional
 
 class EntrenadorRelacionResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     especialidad: str
 

@@ -10,5 +10,5 @@ class Entrenador(Base):
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False, unique=True, index=True)
     estado = Column(String(20), default="activo", nullable=False)
 
-    usuario = relationship("Usuario", back_populates="entrenador")
+    usuario = relationship("Usuario", back_populates="entrenador", lazy="joined")
     sesiones = relationship("SesionProgramada", back_populates="entrenador")
