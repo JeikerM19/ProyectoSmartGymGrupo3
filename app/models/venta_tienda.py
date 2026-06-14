@@ -13,5 +13,5 @@ class VentaTienda(Base):
     cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False, index=True)
     estado = Column(String(20), default="activo", nullable=False)
 
-    cliente = relationship("Cliente", back_populates="ventas")
+    cliente = relationship("Cliente", back_populates="ventas", lazy="joined")
     detalles = relationship("DetalleVenta", back_populates="venta")
