@@ -1,5 +1,5 @@
 from typing import Any, Type, Optional
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
@@ -29,12 +29,24 @@ def create_crud_router(
 
     @router.get("/", dependencies=read_deps)
     async def leer_varios(
+        request: Request,
         page: int = Query(1, ge=1),
         size: int = Query(10, ge=1, le=100),
         db: AsyncSession = Depends(get_db),
     ):
         skip = (page - 1) * size
-        data = await service.obtener_paginado(db, skip=skip, limit=size)
+
+        filters = dict(request.query_params)
+
+        filters.pop("page", None)
+        filters.pop("size", None)
+
+        data = await service.obtener_paginado(
+            db,
+            skip=skip,
+            limit=size,
+            filters=filters
+        )
 
         return {
             "page": page,
