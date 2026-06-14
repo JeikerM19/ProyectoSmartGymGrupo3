@@ -2,6 +2,11 @@ from pydantic import BaseModel, Field, model_validator
 from datetime import date, time
 from typing import Optional
 
+class EntrenadorRelacionResponse(BaseModel):
+    id: int
+    especialidad: str
+
+
 class SesionBase(BaseModel):
     nombre: str = Field(..., min_length=3, max_length=100)
     fecha: date
@@ -34,6 +39,6 @@ class ActualizarSesion(BaseModel):
 
 class RespuestaSesion(SesionBase):
     id: int
-
+    entrenador: Optional[EntrenadorRelacionResponse] = None
     class Config:
         from_attributes = True

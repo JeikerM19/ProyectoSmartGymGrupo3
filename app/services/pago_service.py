@@ -28,7 +28,7 @@ class CRUDPago(CRUDBase[Pago]):
 
         pago = await super().crear(db, obj_in=obj_in)
 
-        membresia.estado = "activa"
+        membresia.estado = "activo"
         await db.commit()
 
         return pago

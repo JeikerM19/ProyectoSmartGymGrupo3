@@ -2,7 +2,8 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
 from datetime import datetime
-
+from typing import Any
+from sqlalchemy.orm import joinedload
 from app.services.base_service import CRUDBase
 from app.models.reserva import Reserva
 from app.models.cliente import Cliente
@@ -11,6 +12,19 @@ from app.models.membresia_cliente import MembresiaCliente
 from app.core.exceptions import ReglaNegocioException
 
 class CRUDReserva(CRUDBase[Reserva]):
+    async def obtener_todos(self, db: AsyncSession) -> list[Reserva]:
+        result = await db.execute(
+            select(Reserva).options(joinedload(Reserva.cliente))
+        )
+        return result.scalars().all()
+
+    async def obtener(self, db: AsyncSession, id: Any) -> Reserva | None:
+        result = await db.execute(
+            select(Reserva)
+            .where(Reserva.id == id)
+            .options(joinedload(Reserva.cliente))
+        )
+        return result.scalars().first()
     
     async def verificar_solapamiento(self, db: AsyncSession, cliente_id: int, nueva_sesion: SesionProgramada):
         stmt = (

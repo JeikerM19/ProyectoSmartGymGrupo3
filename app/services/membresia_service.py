@@ -9,6 +9,15 @@ from app.models.cliente import Cliente
 class CRUDMembresia(CRUDBase[MembresiaCliente]):
     async def crear(self, db: AsyncSession, *, obj_in: dict) -> MembresiaCliente:
 
+        fecha_inicio = obj_in.get("fecha_inicio")
+        fecha_vencimiento = obj_in.get("fecha_vencimiento")
+
+        if fecha_inicio and fecha_vencimiento and fecha_inicio == fecha_vencimiento:
+            raise HTTPException(
+                status_code=400, 
+                detail="La fecha de inicio no puede ser igual a la fecha de vencimiento."
+            )
+
         plan_id = obj_in.get("plan_id")
         result_plan = await db.execute(
             select(PlanSuscripcion).where(PlanSuscripcion.id == plan_id)
