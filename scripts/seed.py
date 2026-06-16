@@ -35,12 +35,10 @@ from app.core.config import settings
 DATABASE_URL = settings.database_url
 
 engine = create_async_engine(DATABASE_URL, echo=False)
-
 SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 
 
 async def seed():
-
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
@@ -52,13 +50,10 @@ async def seed():
             return
 
         admin_rol = Rol(nombre="Administrador", estado="activo")
-
         entrenador_rol = Rol(nombre="Entrenador", estado="activo")
-
         cliente_rol = Rol(nombre="Cliente", estado="activo")
 
         session.add_all([admin_rol, entrenador_rol, cliente_rol])
-
         await session.flush()
 
         admin_user = Usuario(
@@ -86,7 +81,6 @@ async def seed():
         )
 
         session.add_all([admin_user, entrenador_user, cliente_user])
-
         await session.flush()
 
         perfil_entrenador = Entrenador(
@@ -104,7 +98,6 @@ async def seed():
         )
 
         session.add_all([perfil_entrenador, perfil_cliente])
-
         await session.flush()
 
         cat_cardio = CategoriaMaquina(
@@ -124,7 +117,6 @@ async def seed():
         )
 
         session.add_all([cat_cardio, cat_musculacion, cat_peso_libre])
-
         await session.flush()
 
         caminadora = Maquina(
@@ -158,7 +150,9 @@ async def seed():
             estado="activo",
         )
 
-        session.add_all([caminadora, bicicleta, prensa_piernas, polea_cruzada, set_mancuernas])
+        session.add_all(
+            [caminadora, bicicleta, prensa_piernas, polea_cruzada, set_mancuernas]
+        )
         await session.flush()
 
         ticket = TicketMantenimiento(
@@ -169,15 +163,12 @@ async def seed():
             usuario_id=admin_user.id,
             estado="activo",
         )
-
         session.add(ticket)
 
         crossfit = Disciplina(
             nombre="Crossfit", descripcion="Entrenamiento funcional", estado="activo"
         )
-
         session.add(crossfit)
-
         await session.flush()
 
         sesion_hoy = SesionProgramada(
@@ -190,9 +181,7 @@ async def seed():
             entrenador_id=perfil_entrenador.id,
             estado="activo",
         )
-
         session.add(sesion_hoy)
-
         await session.flush()
 
         reserva = Reserva(
@@ -201,7 +190,6 @@ async def seed():
             sesion_id=sesion_hoy.id,
             estado="activo",
         )
-
         session.add(reserva)
 
         evaluacion = EvaluacionBiometrica(
@@ -213,7 +201,6 @@ async def seed():
             observaciones="Buen avance muscular",
             estado="activo",
         )
-
         session.add(evaluacion)
 
         acceso = ControlAcceso(
@@ -221,7 +208,6 @@ async def seed():
             mensaje="Acceso permitido - Mensualidad al día",
             estado="activo",
         )
-
         session.add(acceso)
 
         plan_basico = PlanSuscripcion(
@@ -234,8 +220,6 @@ async def seed():
         session.add_all([plan_basico, plan_vip])
         await session.flush()
 
-        await session.flush()
-
         membresia = MembresiaCliente(
             fecha_inicio=date.today(),
             fecha_vencimiento=date.today() + timedelta(days=30),
@@ -243,9 +227,7 @@ async def seed():
             cliente_id=perfil_cliente.id,
             plan_id=plan_basico.id,
         )
-
         session.add(membresia)
-
         await session.flush()
 
         pago = Pago(
@@ -255,7 +237,6 @@ async def seed():
             usuario_id=admin_user.id,
             estado="activo",
         )
-
         session.add(pago)
 
         agua = ProductoTienda(
@@ -271,15 +252,8 @@ async def seed():
         session.add_all([agua, batido_proteina, toalla_deportiva])
         await session.flush()
 
-        
-        session.add(agua)
-
-        await session.flush()
-
         venta = VentaTienda(total=3.00, cliente_id=perfil_cliente.id, estado="activo")
-
         session.add(venta)
-
         await session.flush()
 
         detalle = DetalleVenta(
@@ -288,12 +262,17 @@ async def seed():
             producto_id=agua.id,
             estado="activo",
         )
-
         session.add(detalle)
 
         await session.commit()
+        print("¡ÉXITO! Seed de SmartGym ejecutado correctamente.")
 
-        print("¡ÉXITO! Seed ejecutado correctamente.")
+
+async def main():
+    try:
+        await seed()
+    finally:
+        await engine.dispose()
 
 if __name__ == "__main__":
-    asyncio.run(seed())
+    asyncio.run(main())

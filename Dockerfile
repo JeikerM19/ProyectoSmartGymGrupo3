@@ -22,5 +22,5 @@ RUN pip install --no-cache-dir "email-validator>=2.0"
 # 6. Copiamos el resto del código del proyecto
 COPY . .
 
-# 7. Ejecutar migraciones automáticas y luego arrancar la API con Uvicorn
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
+# 7. Ejecutar migraciones, llenar datos semilla con PYTHONPATH y arrancar con Uvicorn
+CMD ["sh", "-c", "alembic upgrade head && PYTHONPATH=. python scripts/seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
