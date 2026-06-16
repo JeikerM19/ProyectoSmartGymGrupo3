@@ -2,7 +2,6 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import date
 
-# --- NUEVO: Esquema para la información anidada del usuario ---
 class UsuarioRelacionResponse(BaseModel):
     id: int
     nombre: str 
@@ -29,9 +28,7 @@ class ActualizarCliente(BaseModel):
 class RespuestaCliente(ClienteBase):
     usuario: Optional[UsuarioRelacionResponse] = None
     estado: str
-    id: int
-    # --- NUEVO: Agregamos la relación aquí ---
-    
+    id: int   
 
     class Config:
         from_attributes = True

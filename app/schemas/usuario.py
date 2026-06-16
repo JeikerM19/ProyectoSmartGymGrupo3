@@ -1,5 +1,10 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from typing import Optional
+
+class RoleRelacionResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    nombre: str
 
 class UsuarioBase(BaseModel):
     nombre: str = Field(..., min_length=3, max_length=100)
@@ -18,6 +23,7 @@ class ActualizarUsuario(BaseModel):
 
 class RespuestaUsuario(UsuarioBase):
     id: int
+    rol: Optional[RoleRelacionResponse] = None
     estado: str
 
     class Config:

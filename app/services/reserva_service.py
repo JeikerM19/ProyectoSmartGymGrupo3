@@ -1,4 +1,4 @@
-from sqlalchemy import select, func
+from sqlalchemy import select, func, String, Integer, Float, Boolean, Date, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
 from datetime import datetime
@@ -10,13 +10,59 @@ from app.models.cliente import Cliente
 from app.models.sesion_programada import SesionProgramada
 from app.models.membresia_cliente import MembresiaCliente
 from app.core.exceptions import ReglaNegocioException
+from datetime import date
 
 class CRUDReserva(CRUDBase[Reserva]):
-    async def obtener_todos(self, db: AsyncSession) -> list[Reserva]:
+    async def obtener_todos(self, db: AsyncSession, *, skip: int = 0, limit: int = 100) -> list[Reserva]:
         result = await db.execute(
-            select(Reserva).options(joinedload(Reserva.cliente))
+            select(Reserva).options(joinedload(Reserva.cliente)).offset(skip).limit(limit)
         )
         return result.scalars().all()
+
+    async def obtener_paginado(self, db: AsyncSession, *, skip: int = 0, limit: int = 10, filters: dict | None = None):
+        query = select(Reserva).options(joinedload(Reserva.cliente))
+
+        if filters:
+            for field, value in filters.items():
+                if not hasattr(Reserva, field):
+                    continue
+
+                column = getattr(Reserva, field)
+
+                try:
+                    column_type = column.property.columns[0].type
+
+                    if isinstance(column_type, String):
+                        query = query.where(column.ilike(f"%{value}%"))
+
+                    elif isinstance(column_type, Integer):
+                        query = query.where(column == int(value))
+
+                    elif isinstance(column_type, Float):
+                        query = query.where(column == float(value))
+
+                    elif isinstance(column_type, Boolean):
+                        query = query.where(column == (str(value).lower() == "true"))
+
+                    elif isinstance(column_type, Date):
+                        query = query.where(column == date.fromisoformat(value))
+
+                    elif isinstance(column_type, DateTime):
+                        query = query.where(column == datetime.fromisoformat(value))
+
+                    else:
+                        query = query.where(column == value)
+
+                except (ValueError, TypeError, AttributeError):
+                    continue
+
+        total_query = select(func.count()).select_from(query.subquery())
+
+        total = await db.scalar(total_query)
+
+        result = await db.execute(query.offset(skip).limit(limit))
+
+        return {"total": total, "items": result.scalars().all()}
 
     async def obtener(self, db: AsyncSession, id: Any) -> Reserva | None:
         result = await db.execute(

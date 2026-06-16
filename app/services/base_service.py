@@ -4,7 +4,6 @@ from sqlalchemy import select, func, String, Integer, Float, Boolean, Date, Date
 from app.db.base import Base
 from datetime import datetime, date
 
-# Definimos un tipo genérico que debe ser un modelo de SQLAlchemy
 ModelType = TypeVar("ModelType", bound=Base)
 
 
@@ -94,7 +93,6 @@ class CRUDBase(Generic[ModelType]):
             return obj
         return None
 
-    # --- ELIMINACIONES ---
 
     async def eliminacion_logica(
         self, db: AsyncSession, *, id: int

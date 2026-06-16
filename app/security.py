@@ -1,18 +1,18 @@
-import bcrypt 
+import bcrypt # Usamos bcrypt directamente
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from app.core.config import settings
 
-
+# Eliminamos pwd_context y passlib
 def hash_password(password: str) -> str:
-    
+    # Codificamos la contraseña a bytes, generamos salt y hasheamos
     pwd_bytes = password.encode('utf-8')
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(pwd_bytes, salt)
     return hashed_password.decode('utf-8')
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    
+    # Comparamos los bytes de la contraseña plana con los del hash
     password_byte_enc = plain_password.encode('utf-8')
     hashed_password_bytes = hashed_password.encode('utf-8')
     try:

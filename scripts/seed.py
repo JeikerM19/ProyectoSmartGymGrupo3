@@ -112,8 +112,18 @@ async def seed():
             descripcion="Máquinas de resistencia cardiovascular",
             estado="activo",
         )
+        cat_musculacion = CategoriaMaquina(
+            nombre="Musculación",
+            descripcion="Máquinas de peso integrado y guiado",
+            estado="activo",
+        )
+        cat_peso_libre = CategoriaMaquina(
+            nombre="Peso Libre",
+            descripcion="Mancuernas, barras y discos",
+            estado="activo",
+        )
 
-        session.add(cat_cardio)
+        session.add_all([cat_cardio, cat_musculacion, cat_peso_libre])
 
         await session.flush()
 
@@ -123,9 +133,32 @@ async def seed():
             categoria_id=cat_cardio.id,
             estado="activo",
         )
+        bicicleta = Maquina(
+            nombre="Bicicleta Estática",
+            descripcion="Bicicleta de spinning profesional",
+            categoria_id=cat_cardio.id,
+            estado="activo",
+        )
+        prensa_piernas = Maquina(
+            nombre="Prensa de Piernas 45°",
+            descripcion="Prensa de discos para tren inferior",
+            categoria_id=cat_musculacion.id,
+            estado="activo",
+        )
+        polea_cruzada = Maquina(
+            nombre="Polea Cruzada",
+            descripcion="Torre de poleas múltiples",
+            categoria_id=cat_musculacion.id,
+            estado="activo",
+        )
+        set_mancuernas = Maquina(
+            nombre="Set de Mancuernas",
+            descripcion="Rack de mancuernas de 5 a 50 lbs",
+            categoria_id=cat_peso_libre.id,
+            estado="activo",
+        )
 
-        session.add(caminadora)
-
+        session.add_all([caminadora, bicicleta, prensa_piernas, polea_cruzada, set_mancuernas])
         await session.flush()
 
         ticket = TicketMantenimiento(
@@ -194,8 +227,12 @@ async def seed():
         plan_basico = PlanSuscripcion(
             nombre="Mensualidad Básica", precio=35.00, duracion_dias=30, estado="activo"
         )
+        plan_vip = PlanSuscripcion(
+            nombre="Suscripción VIP", precio=50.00, duracion_dias=30, estado="activo"
+        )
 
-        session.add(plan_basico)
+        session.add_all([plan_basico, plan_vip])
+        await session.flush()
 
         await session.flush()
 
@@ -224,7 +261,17 @@ async def seed():
         agua = ProductoTienda(
             nombre="Botella de Agua 1L", precio=1.50, stock=100, estado="activo"
         )
+        batido_proteina = ProductoTienda(
+            nombre="Batido de Proteína", precio=5.00, stock=50, estado="activo"
+        )
+        toalla_deportiva = ProductoTienda(
+            nombre="Toalla Deportiva", precio=8.00, stock=30, estado="activo"
+        )
 
+        session.add_all([agua, batido_proteina, toalla_deportiva])
+        await session.flush()
+
+        
         session.add(agua)
 
         await session.flush()

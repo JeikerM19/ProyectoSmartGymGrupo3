@@ -11,12 +11,10 @@ router = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 @router.post("/login")
 async def login(credentials: LoginRequest, db: AsyncSession = Depends(get_db)):
 
-    # Buscar usuario por email
     result = await db.execute(select(Usuario).where(Usuario.email == credentials.email))
 
     user = result.scalars().first()
 
-    # Validar usuario y contraseña
     if not user or not verify_password(credentials.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -24,14 +22,11 @@ async def login(credentials: LoginRequest, db: AsyncSession = Depends(get_db)):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # Validar estado del usuario
     if user.estado != "activo":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Usuario inactivo"
         )
 
-    # Crear token JWT
     access_token = create_access_token(data={"sub": user.email, "role_id": user.rol_id})
 
-    # Respuesta
     return {"access_token": access_token, "token_type": "bearer"}
